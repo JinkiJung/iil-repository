@@ -17,13 +17,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -58,7 +59,6 @@ public class Iil{
     @Column(name = "name")
     private String name;
 
-    @NotNull
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
     @Column(name = "goal")
     private String goal;
@@ -67,6 +67,10 @@ public class Iil{
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
     @Column(name = "startWhen")
     private String startWhen;
+
+    @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
+    @Column(name = "given")
+    private String given;
 
     @NotNull
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
@@ -112,11 +116,9 @@ public class Iil{
     @Column(name = "last_updated_at")
     private Date lastUpdatedAt;
 
-    /*
-    @NotNull
     @Column(name = "leadTo")
-    private List<IilFlow> leadTo;
-    */
+    @OneToMany
+    private List<Flow> leadTo;
 
     public String getIdAsString() {
         return this.id.toString();

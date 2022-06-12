@@ -7,6 +7,7 @@ import javax.validation.constraints.NotNull;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -16,10 +17,11 @@ public class IilDto implements Serializable {
 
     private UUID id;
 
-    @NotNull
     private String name;
 
     private String goal;
+
+    private String given;
 
     private String startWhen;
 
@@ -40,4 +42,6 @@ public class IilDto implements Serializable {
     private Date createdAt;
 
     private Date lastUpdatedAt;
+
+    private List<FlowDto> leadTo;
 }
