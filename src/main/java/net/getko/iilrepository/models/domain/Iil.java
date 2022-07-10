@@ -16,14 +16,17 @@ import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -59,13 +62,13 @@ public class Iil{
     @Column(name = "name")
     private String name;
 
-    @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
-    @Column(name = "goal")
-    private String goal;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "goal_id")
+    private Iil goal;
 
     @NotNull
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
-    @Column(name = "startWhen")
+    @Column(name = "start_when")
     private String startWhen;
 
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
@@ -84,7 +87,7 @@ public class Iil{
 
     @NotNull
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
-    @Column(name = "endWhen")
+    @Column(name = "end_when")
     private String endWhen;
 
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
@@ -93,12 +96,12 @@ public class Iil{
 
     @NotNull
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
-    @Column(name = "createdBy")
+    @Column(name = "created_by")
     private String createdBy;
 
     @NotNull
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
-    @Column(name = "ownedBy")
+    @Column(name = "owned_by")
     private String ownedBy;
 
     @NotNull
@@ -109,14 +112,14 @@ public class Iil{
     @CreatedDate
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
     @Column(name = "created_at")
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
     @Column(name = "last_updated_at")
-    private Date lastUpdatedAt;
+    private LocalDateTime lastUpdatedAt;
 
-    @Column(name = "leadTo")
+    @Column(name = "lead_to")
     @OneToMany
     private List<Flow> leadTo;
 

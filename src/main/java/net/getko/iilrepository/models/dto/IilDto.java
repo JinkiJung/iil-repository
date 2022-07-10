@@ -6,7 +6,7 @@ import net.getko.iilrepository.models.domain.IilStatus;
 import javax.validation.constraints.NotNull;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,7 +19,7 @@ public class IilDto implements Serializable {
 
     private String name;
 
-    private String goal;
+    private IilDto goal;
 
     private String given;
 
@@ -39,9 +39,9 @@ public class IilDto implements Serializable {
 
     private IilStatus status;
 
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
-    private Date lastUpdatedAt;
+    private LocalDateTime lastUpdatedAt;
 
     private List<FlowDto> leadTo;
 }
