@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import net.getko.iilrepository.exceptions.DataNotFoundException;
+import net.getko.iilrepository.exceptions.DuplicatedDataException;
 import net.getko.iilrepository.models.domain.Iil;
 import net.getko.iilrepository.models.dto.IilDto;
 import net.getko.iilrepository.repositories.IilRepository;
@@ -47,8 +48,15 @@ public class IilService {
      * @return the persisted entity
      */
     @Transactional
-    public Iil save(Iil iil) throws DataNotFoundException {
+    public Iil save(Iil iil) {
         log.debug("Request to save Instance : {}", iil);
+        if (iil.getId() != null && this.iilRepo.findById(iil.getId()).isPresent()) {
+            throw new DuplicatedDataException("Duplicate data detected");
+        }
+
+        if (iil.getGoal() != null && !this.iilRepo.findById(iil.getGoal().getId()).isPresent()) {
+            throw new IllegalArgumentException("No instance corresponding to goal");
+        }
 
         // The save and return
         return this.iilRepo.save(iil);

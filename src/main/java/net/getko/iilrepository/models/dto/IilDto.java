@@ -3,11 +3,10 @@ package net.getko.iilrepository.models.dto;
 import lombok.Data;
 import net.getko.iilrepository.models.domain.IilStatus;
 
-import javax.validation.constraints.NotNull;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Data
@@ -17,7 +16,7 @@ public class IilDto implements Serializable {
 
     private UUID id;
 
-    private String name;
+    private Map<String, String> describe;
 
     private IilDto goal;
 
@@ -43,5 +42,5 @@ public class IilDto implements Serializable {
 
     private LocalDateTime lastUpdatedAt;
 
-    private List<FlowDto> leadTo;
+    private List<FlowDto> flow;
 }
