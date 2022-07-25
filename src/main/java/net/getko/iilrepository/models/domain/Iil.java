@@ -76,20 +76,20 @@ public class Iil{
     @JoinColumn(name = "goal_id")
     private Iil goal;
 
-    @Column(name = "flow")
+    @Column(name = "next_flow")
     @OneToMany
-    private List<Flow> flow;
+    private List<NextFlow> nextFlow;
     // 네임스페이스 존재, 호환성 보장
 
     @NotNull
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
-    @Column(name = "start_when")
-    private String startWhen;
+    @Column(name = "start_if")
+    private String startIf;
     // 결과: 상태 변경, 보고
 
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
-    @Column(name = "given")
-    private String given;
+    @Column(name = "input")
+    private String input;
 
     @NotNull
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
@@ -104,13 +104,13 @@ public class Iil{
 
     @NotNull
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
-    @Column(name = "end_when")
-    private String endWhen;
+    @Column(name = "end_if")
+    private String endIf;
     // 결과: 상태 변경, 보고, 플로우 시작
 
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
-    @Column(name = "produce")
-    private String produce;
+    @Column(name = "output")
+    private String output;
 /*
     @NotNull
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
@@ -119,8 +119,8 @@ public class Iil{
 */
     @NotNull
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
-    @Column(name = "owned_by")
-    private String ownedBy;
+    @Column(name = "owner")
+    private String owner;
 
     @CreatedDate
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)

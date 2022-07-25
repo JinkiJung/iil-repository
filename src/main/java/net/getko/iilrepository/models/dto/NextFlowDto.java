@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Data
-public class FlowDto implements Serializable {
+public class NextFlowDto implements Serializable {
     private UUID id;
 
     private Map<String, String> describe;

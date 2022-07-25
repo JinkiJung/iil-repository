@@ -19,7 +19,6 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
 import java.util.Map;
@@ -28,14 +27,14 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "flow")
+@Table(name = "next_flow")
 @Indexed
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Data
 @Getter
 @Setter
-public class Flow {
+public class NextFlow {
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -44,7 +43,7 @@ public class Flow {
     private UUID id;
 
     @ElementCollection
-    @CollectionTable(name = "flow_describe_mapping",
+    @CollectionTable(name = "next_flow_describe_mapping",
             joinColumns = {@JoinColumn(name = "describe_id", referencedColumnName = "id")})
     @MapKeyColumn(name = "key")
     @Column(name = "value")

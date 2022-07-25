@@ -20,21 +20,19 @@ public class IilDto implements Serializable {
 
     private IilDto goal;
 
-    private String given;
+    private String input;
 
-    private String startWhen;
+    private String startIf;
 
     private String act;
 
     private String actor;
 
-    private String endWhen;
+    private String endIf;
 
-    private String produce;
+    private String output;
 
-    private String createdBy;
-
-    private String ownedBy;
+    private String owner;
 
     private IilStatus status;
 
@@ -42,5 +40,5 @@ public class IilDto implements Serializable {
 
     private LocalDateTime lastUpdatedAt;
 
-    private List<FlowDto> flow;
+    private List<NextFlowDto> nextFlow;
 }
