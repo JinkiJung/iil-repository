@@ -3,9 +3,10 @@ package net.getko.iilrepository.controllers;
 import lombok.extern.slf4j.Slf4j;
 import net.getko.iilrepository.components.DomainDtoMapper;
 import net.getko.iilrepository.models.domain.Iil;
+import net.getko.iilrepository.models.domain.User;
 import net.getko.iilrepository.models.dto.IilDto;
-import net.getko.iilrepository.services.IilService;
-import org.apache.tomcat.util.http.HeaderUtil;
+import net.getko.iilrepository.models.dto.UserDto;
+import net.getko.iilrepository.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -24,48 +25,48 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/iils")
+@RequestMapping("/api/users")
 @Slf4j
-public class IilController {
+public class UserController {
 
     @Autowired
-    IilService iilService;
+    UserService userService;
 
     @Autowired
-    DomainDtoMapper<Iil, IilDto> iilDomainToDtoMapper;
+    DomainDtoMapper<User, UserDto> userDomainToDtoMapper;
 
     @Autowired
-    DomainDtoMapper<IilDto, Iil> iilDtoToDomainMapper;
+    DomainDtoMapper<UserDto, User> userDtoToDomainMapper;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<IilDto>> getIils() {
-        log.debug("REST request to get a list of iils");
-        final List<Iil> iils = this.iilService.findAll();
+    public ResponseEntity<List<UserDto>> getUsers() {
+        log.debug("REST request to get a list of users");
+        final List<User> users = this.userService.findAll();
         return ResponseEntity.ok()
-                .body(this.iilDomainToDtoMapper.convertToList(iils, IilDto.class));
+                .body(this.userDomainToDtoMapper.convertToList(users, UserDto.class));
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<IilDto> getIil(@PathVariable UUID id) {
-        log.debug("REST request to get an iil : {}", id);
-        final Iil result = this.iilService.findOne(id);
+    public ResponseEntity<UserDto> getUser(@PathVariable UUID id) {
+        log.debug("REST request to get a user : {}", id);
+        final User result = this.userService.findOne(id);
         return ResponseEntity.ok()
-                .body(this.iilDomainToDtoMapper.convertTo(result, IilDto.class));
+                .body(this.userDomainToDtoMapper.convertTo(result, UserDto.class));
     }
 
     @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<IilDto> createIil(@Valid @RequestBody IilDto iilDto) {
-        log.debug("REST request to get an iil : {}", iilDto);
-        Iil iil = this.iilDtoToDomainMapper.convertTo(iilDto, Iil.class);
-        final Iil result = this.iilService.save(iil);
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
+        log.debug("REST request to get an iil : {}", userDto);
+        User user = this.userDtoToDomainMapper.convertTo(userDto, User.class);
+        final User result = this.userService.save(user);
         return ResponseEntity.ok()
-                .body(this.iilDomainToDtoMapper.convertTo(result, IilDto.class));
+                .body(this.userDomainToDtoMapper.convertTo(result, UserDto.class));
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> deleteIil(@PathVariable UUID id) {
-        log.debug("REST request to delete an iil : {}", id);
-        this.iilService.delete(id);
+    public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
+        log.debug("REST request to delete user : {}", id);
+        this.userService.delete(id);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("successfully deleted - ",
                 id.toString());
@@ -75,12 +76,12 @@ public class IilController {
     }
 
     @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<IilDto> updateIil(@PathVariable UUID id, @Valid @RequestBody IilDto iilDto) {
-        log.debug("REST request to get an iil : {}", iilDto);
-        iilDto.setId(id);
-        Iil iil = this.iilDtoToDomainMapper.convertTo(iilDto, Iil.class);
-        final Iil result = this.iilService.save(iil);
+    public ResponseEntity<UserDto> updateUser(@PathVariable UUID id, @Valid @RequestBody UserDto userDto) {
+        log.debug("REST request to get an iil : {}", userDto);
+        userDto.setId(id);
+        User user = this.userDtoToDomainMapper.convertTo(userDto, User.class);
+        final User result = this.userService.save(user);
         return ResponseEntity.ok()
-                .body(this.iilDomainToDtoMapper.convertTo(result, IilDto.class));
+                .body(this.userDomainToDtoMapper.convertTo(result, UserDto.class));
     }
 }
