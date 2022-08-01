@@ -22,6 +22,8 @@ public class IilDto implements Serializable {
 
     private String input;
 
+    private String namespace;
+
     private String startIf;
 
     private String act;
@@ -40,5 +42,5 @@ public class IilDto implements Serializable {
 
     private LocalDateTime lastUpdatedAt;
 
-    private List<NextFlowDto> nextFlow;
+    private List<NextFlowDto> next;
 }

@@ -1,10 +1,7 @@
 package net.getko.iilrepository.models.domain;
 
-import com.sun.istack.NotNull;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -26,6 +23,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 
@@ -37,7 +35,7 @@ import java.util.UUID;
 /**
  * The type Iil.
  * <p>
- * An unit for work.
+ * A work description.
  * </p>
  * @author Jinki Jung (email: your.jinki.jung@gmail.com)
  */
@@ -49,8 +47,6 @@ import java.util.UUID;
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Data
-@Getter
-@Setter
 public class Iil{
     private static final long serialVersionUID = 1L;
 
@@ -76,10 +72,15 @@ public class Iil{
     @JoinColumn(name = "goal_id")
     private Iil goal;
 
-    @Column(name = "next_flow")
+    @Column(name = "next")
     @OneToMany
-    private List<NextFlow> nextFlow;
+    private List<NextFlow> next;
     // 네임스페이스 존재, 호환성 보장
+
+    @NotNull
+    @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
+    @Column(name = "namespace")
+    private String namespace;
 
     @NotNull
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
