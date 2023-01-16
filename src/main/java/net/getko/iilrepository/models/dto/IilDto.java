@@ -1,8 +1,7 @@
 package net.getko.iilrepository.models.dto;
 
 import lombok.Data;
-import net.getko.iilrepository.models.domain.IilStatus;
-
+import net.getko.iilrepository.models.domain.IilState;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,31 +15,35 @@ public class IilDto implements Serializable {
 
     private UUID id;
 
-    private Map<String, String> describe;
+    private String namespace;
 
-    private IilDto goal;
+    private String version;
+
+    private Map<String, Object> help; // when user request
+
+    private Map<String, Object> about; //description
+
+    private UUID goal; // for what
 
     private String input;
 
-    private String namespace;
-
-    private String startIf;
+    private String activateIf;
 
     private String act;
 
     private String actor;
 
-    private String endIf;
+    private String finishIf;
 
     private String output;
 
+    private String creator;
+
     private String owner;
 
-    private IilStatus status;
+    private IilState state;
 
-    private LocalDateTime createdAt;
-
-    private LocalDateTime lastUpdatedAt;
+    private LocalDateTime updatedAt;
 
     private List<NextFlowDto> next;
 }

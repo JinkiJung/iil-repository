@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.stereotype.Indexed;
 
@@ -33,8 +34,6 @@ import java.util.UUID;
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Data
-@Getter
-@Setter
 public class NextFlow {
 
     @Id
@@ -51,10 +50,35 @@ public class NextFlow {
     private Map<String, String> describe;
 
     @NotNull
-    @Column(name = "from")
+    @Column(name = "version")
+    private String version;
+
+    @NotNull
+    @Column(name = "namespace")
+    private String namespace;
+
+    @Column(name = "input")
+    private String input;
+
+    @Column(name = "condition")
+    private String condition;
+
+    @NotNull
+    @Column(name = "creator")
+    private String creator;
+
+    @NotNull
+    @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
+    @Column(name = "owner")
+    private String owner;
+
+    @NotNull
+    @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
+    @Column(name = "from_iil")
     private UUID from;
 
     @NotNull
-    @Column(name = "to")
+    @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
+    @Column(name = "to_iil")
     private UUID to;
 }

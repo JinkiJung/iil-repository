@@ -11,4 +11,18 @@ public class NextFlowDto implements Serializable {
     private UUID id;
 
     private Map<String, String> describe;
+
+    private String namespace;
+
+    private String input;
+
+    private String condition;
+
+    private String creator;
+
+    private String owner;
+
+    private UUID from;
+
+    private UUID to;
 }

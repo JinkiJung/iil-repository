@@ -42,13 +42,25 @@ public class IilService {
      * @return the persisted entity
      */
     @Transactional
-    public Iil save(Iil iil) {
-        log.debug("Request to save iil : {}", iil);
+    public Iil create(Iil iil) {
         if (iil.getId() != null && this.iilRepository.findById(iil.getId()).isPresent()) {
             throw new DuplicatedDataException("Duplicate data detected");
         }
+        // The save and return
+        return this.save(iil);
+    }
 
-        if (iil.getGoal() != null && !this.iilRepository.findById(iil.getGoal().getId()).isPresent()) {
+    /**
+     * Save an iil.
+     *
+     * @param iil  the entity to save
+     * @return the persisted entity
+     */
+    @Transactional
+    public Iil save(Iil iil) {
+        log.debug("Request to save iil : {}", iil);
+
+        if (iil.getGoal() != null && !this.iilRepository.findById(iil.getGoal()).isPresent()) {
             throw new IllegalArgumentException("No iil corresponding to goal");
         }
 
