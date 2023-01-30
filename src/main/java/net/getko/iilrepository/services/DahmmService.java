@@ -2,10 +2,9 @@ package net.getko.iilrepository.services;
 
 import lombok.extern.slf4j.Slf4j;
 import net.getko.iilrepository.exceptions.DataNotFoundException;
-import net.getko.iilrepository.models.domain.Iil;
-import net.getko.iilrepository.models.domain.NextFlow;
+import net.getko.iilrepository.models.domain.Dahmm;
 import net.getko.iilrepository.repositories.IilRepository;
-import net.getko.iilrepository.repositories.NextFlowRepository;
+import net.getko.iilrepository.repositories.DahmmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.config.ConfigDataNotFoundException;
 import org.springframework.stereotype.Service;
@@ -19,48 +18,48 @@ import java.util.UUID;
 @Service
 @Slf4j
 @Transactional
-public class NextFlowService {
+public class DahmmService {
     @Autowired
-    NextFlowRepository nextFlowRepository;
+    DahmmRepository dahmmRepository;
 
     @Autowired
     IilRepository iilRepository;
 
     @Transactional(readOnly = true)
-    public List<NextFlow> findAll() {
-        log.debug("Request to get all NextFlows");
-        return this.nextFlowRepository.findAll();
+    public List<Dahmm> findAll() {
+        log.debug("Request to get all dahmms");
+        return this.dahmmRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public NextFlow findOne(UUID id) throws ConfigDataNotFoundException {
+    public Dahmm findOne(UUID id) throws ConfigDataNotFoundException {
         log.debug("Request to get NextFlow : {}", id);
-        return Optional.ofNullable(id).map(this.nextFlowRepository::findById).get()
-                .orElseThrow(() -> new DataNotFoundException("No NextFlow found for the provided ID"));
+        return Optional.ofNullable(id).map(this.dahmmRepository::findById).get()
+                .orElseThrow(() -> new DataNotFoundException("No dahmms found for the provided ID"));
     }
 
     @Transactional
-    public NextFlow save(NextFlow nextFlow) {
-        if (!this.iilRepository.findById(nextFlow.getFrom()).isPresent()) {
+    public Dahmm save(Dahmm dahmm) {
+        if (!this.iilRepository.findById(dahmm.getIilFrom()).isPresent()) {
             throw new DataNotFoundException("From element does not exist");
         }
 
-        if (!this.iilRepository.findById(nextFlow.getTo()).isPresent()) {
+        if (!this.iilRepository.findById(dahmm.getIilTo()).isPresent()) {
             throw new DataNotFoundException("To element does not exist");
         }
 
-        return this.nextFlowRepository.save(nextFlow);
+        return this.dahmmRepository.save(dahmm);
     }
 
     @Transactional(propagation = Propagation.NESTED)
     public void delete(UUID id) throws DataNotFoundException {
-        log.debug("Request to delete nextFlow : {}", id);
+        log.debug("Request to delete dahmm : {}", id);
 
-        this.nextFlowRepository.findById(id)
-                .map(NextFlow::getId)
+        this.dahmmRepository.findById(id)
+                .map(Dahmm::getId)
                 .ifPresentOrElse(
-                        this.nextFlowRepository::deleteById,
-                        () -> {throw new DataNotFoundException("No NextFlow found for the provided ID");}
+                        this.dahmmRepository::deleteById,
+                        () -> {throw new DataNotFoundException("No dahmm found for the provided ID");}
                 );
     }
 }

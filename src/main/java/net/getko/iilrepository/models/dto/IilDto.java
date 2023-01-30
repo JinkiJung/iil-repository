@@ -37,7 +37,7 @@ public class IilDto implements Serializable {
 
     private String output;
 
-    private String creator;
+    private String maintainer;
 
     private String owner;
 
@@ -45,5 +45,5 @@ public class IilDto implements Serializable {
 
     private LocalDateTime updatedAt;
 
-    private List<NextFlowDto> next;
+    private List<DahmmDto> dahmm;
 }

@@ -1,26 +1,23 @@
 package net.getko.iilrepository.models.domain;
 
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.stereotype.Indexed;
 
+import javax.persistence.Basic;
 import javax.persistence.Cacheable;
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.util.Map;
@@ -29,12 +26,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "next_flow")
+@Table(name = "dahmm")
 @Indexed
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Data
-public class NextFlow {
+public class Dahmm {
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -42,12 +39,10 @@ public class NextFlow {
     @Column(name = "id", columnDefinition = "uuid")
     private UUID id;
 
-    @ElementCollection
-    @CollectionTable(name = "next_flow_describe_mapping",
-            joinColumns = {@JoinColumn(name = "describe_id", referencedColumnName = "id")})
-    @MapKeyColumn(name = "key")
-    @Column(name = "value")
-    private Map<String, String> describe;
+    @Type(type = "jsonb")
+    @Column(name = "about", columnDefinition = "jsonb")
+    @Basic(fetch = FetchType.LAZY)
+    private Map<String, Object> about;
 
     @NotNull
     @Column(name = "version")
@@ -64,8 +59,8 @@ public class NextFlow {
     private String condition;
 
     @NotNull
-    @Column(name = "creator")
-    private String creator;
+    @Column(name = "maintainer")
+    private String maintainer;
 
     @NotNull
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
@@ -74,11 +69,11 @@ public class NextFlow {
 
     @NotNull
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
-    @Column(name = "from_iil")
-    private UUID from;
+    @Column(name = "iilfrom")
+    private UUID iilFrom;
 
     @NotNull
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
-    @Column(name = "to_iil")
-    private UUID to;
+    @Column(name = "iilto")
+    private UUID iilTo;
 }

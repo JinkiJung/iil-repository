@@ -7,10 +7,12 @@ import java.util.Map;
 import java.util.UUID;
 
 @Data
-public class NextFlowDto implements Serializable {
+public class DahmmDto implements Serializable {
     private UUID id;
 
-    private Map<String, String> describe;
+    private Map<String, Object> about; //description
+
+    private String version;
 
     private String namespace;
 
@@ -18,11 +20,11 @@ public class NextFlowDto implements Serializable {
 
     private String condition;
 
-    private String creator;
+    private String maintainer;
 
     private String owner;
 
-    private UUID from;
+    private UUID iilFrom;
 
-    private UUID to;
+    private UUID iilTo;
 }

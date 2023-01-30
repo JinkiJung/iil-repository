@@ -8,25 +8,18 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.stereotype.Indexed;
 
 import javax.persistence.Basic;
 import javax.persistence.Cacheable;
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapKeyColumn;
-import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -87,9 +80,9 @@ public class Iil{
     @Column(name = "goal")
     private UUID goal;
 
-    @Column(name = "next")
+    @Column(name = "dahmm")
     @OneToMany
-    private List<NextFlow> next;
+    private List<Dahmm> dahmm;
     // 네임스페이스 존재, 호환성 보장
 
     @NotNull
@@ -128,8 +121,8 @@ public class Iil{
 
     @NotNull
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
-    @Column(name = "creator")
-    private String creator;
+    @Column(name = "maintainer")
+    private String maintainer;
 
     @NotNull
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
