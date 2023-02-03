@@ -105,7 +105,6 @@ public class Iil{
     private String act;
     // 네임스페이스 존재, 호환성 보장
 
-    @NotNull
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
     @Column(name = "actor")
     private String actor;
