@@ -3,11 +3,9 @@ package net.getko.iilrepository.models.domain;
 public enum IilState {
     NOTACTIVATED("notactivated"),
     ACTIVE("active"),
-    FOCUSED("focused"),
     PENDING("pending"),
     FINISHED("finished"),
-    ACHIEVED("achieved");
-
+    ABORTED("aborted");
     private final String value;
 
     private IilState(String v) {

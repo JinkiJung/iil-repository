@@ -25,17 +25,17 @@ public class IilDto implements Serializable {
 
     private UUID goal; // for what
 
-    private String input;
+    private Map<String, Object> input;
 
-    private String activateIf;
+    private ConditionDto activateIf;
 
-    private String act;
+    private ActionDto act;
 
     private String actor;
 
-    private String finishIf;
+    private ConditionDto finishIf;
 
-    private String output;
+    private Map<String, Object> output;
 
     private String maintainer;
 
@@ -45,5 +45,5 @@ public class IilDto implements Serializable {
 
     private LocalDateTime updatedAt;
 
-    private List<DahmmDto> dahmm;
+    private Map<String, Object> next;
 }

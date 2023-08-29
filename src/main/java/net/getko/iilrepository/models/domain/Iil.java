@@ -14,13 +14,16 @@ import org.springframework.stereotype.Indexed;
 
 import javax.persistence.Basic;
 import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -80,45 +83,49 @@ public class Iil{
     @Column(name = "goal")
     private UUID goal;
 
-    @Column(name = "dahmm")
-    @OneToMany
-    private List<Dahmm> dahmm;
-    // 네임스페이스 존재, 호환성 보장
+    @Type(type = "jsonb")
+    @Column(name = "next", columnDefinition = "jsonb")
+    @Basic(fetch = FetchType.LAZY)
+    private Map<String, Object> next;
 
     @NotNull
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
     @Column(name = "namespace")
     private String namespace;
 
-    @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
-    @Column(name = "activateif")
-    private String activateIf;
+    @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true, fetch=FetchType.LAZY)
+    @JoinColumn(unique = true)
+    private Condition activateIf;
     // 결과: 상태 변경, 보고
 
-    @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
-    @Column(name = "input")
-    private String input;
+    @Type(type = "jsonb")
+    @Column(name = "input", columnDefinition = "jsonb")
+    @Basic(fetch = FetchType.LAZY)
+    private Map<String, Object> input;
 
-    @NotNull
-    @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
-    @Column(name = "act")
-    private String act;
+    @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true, fetch=FetchType.LAZY)
+    @JoinColumn(unique = true)
+    private Action act;
     // 네임스페이스 존재, 호환성 보장
 
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
     @Column(name = "actor")
     private String actor;
 
-    @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
-    @Column(name = "finishIf")
-    private String finishIf;
+    @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true, fetch=FetchType.LAZY)
+    @JoinColumn(unique = true)
+    private Condition finishIf;
     // 결과: 상태 변경, 보고, 플로우 시작
 
-    @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
-    @Column(name = "output")
-    private String output;
+    @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true, fetch=FetchType.LAZY)
+    @JoinColumn(unique = true)
+    private Condition abortIf;
 
-    @NotNull
+    @Type(type = "jsonb")
+    @Column(name = "output", columnDefinition = "jsonb")
+    @Basic(fetch = FetchType.LAZY)
+    private Map<String, Object> output;
+
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
     @Column(name = "maintainer")
     private String maintainer;
