@@ -122,4 +122,21 @@ public class IilServiceTest {
         // And also that no saving calls took place in the repository
         verify(this.iilRepository, never()).save(any());
     }
+
+    /**
+     * Test that when we are trying to update an iil but the
+     * provided ID is invalid, a DataNotFoundException will be thrown.
+     */
+    @Test
+    void testSaveNoValidId() {
+        doReturn(Optional.empty()).when(this.iilRepository).findById(this.existingIil.getId());
+
+        // Perform the service call
+        assertThrows(DataNotFoundException.class, () ->
+                this.iilService.save(this.existingIil)
+        );
+
+        // And also that no saving calls took place in the repository
+        verify(this.iilRepository, never()).save(any());
+    }
 }

@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -88,7 +89,15 @@ public class IilService {
     @Transactional
     public Iil save(Iil iil) throws ActionValidationException, ConditionValidationException {
         log.debug("Request to save iil : {}", iil);
-        
+
+        // Try to find the instance if an ID is provided
+        if(iil.getId() != null) {
+            this.iilRepository.findById(iil.getId())
+                    .ifPresentOrElse(existingInstance -> {}, () -> {
+                        throw new DataNotFoundException("No instance found for the provided ID");
+                    });
+        }
+
         if (iil.getGoal() != null && !this.iilRepository.findById(iil.getGoal()).isPresent()) {
             throw new IllegalArgumentException("No iil corresponding to goal");
         }
