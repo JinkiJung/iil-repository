@@ -129,6 +129,13 @@ public class IilService {
             }
         }
 
+        if (iil.getAbortIf() != null) {
+            if (iil.getAbortIf().getId() == null) {
+                Condition condition = conditionService.createWithNewId(iil.getAbortIf());
+                iil.setAbortIf(condition);
+            }
+        }
+
         this.validateIil(iil);
 
         // The save and return

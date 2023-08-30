@@ -43,6 +43,8 @@ public class IilDto implements Serializable {
 
     private IilState state;
 
+    private ConditionDto abortIf;
+
     private LocalDateTime updatedAt;
 
     private Map<String, Object> next;
