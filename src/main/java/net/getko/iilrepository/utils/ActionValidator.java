@@ -1,7 +1,6 @@
 package net.getko.iilrepository.utils;
 
 import net.getko.iilrepository.models.domain.Action;
-import net.getko.iilrepository.models.domain.Condition;
 
 public class ActionValidator {
     public static boolean validate(Action action) {
@@ -9,9 +8,6 @@ public class ActionValidator {
             return false;
         }
         if (action.getName() == null) {
-            return false;
-        }
-        if (action.getShortName() == null) {
             return false;
         }
         return true;

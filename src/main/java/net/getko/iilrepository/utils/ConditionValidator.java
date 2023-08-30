@@ -10,12 +10,6 @@ public class ConditionValidator {
         if (condition.getName() == null) {
             return false;
         }
-        if (condition.getShortName() == null) {
-            return false;
-        }
-        if (condition.getType() == null) {
-            return false;
-        }
         return true;
     }
 }
