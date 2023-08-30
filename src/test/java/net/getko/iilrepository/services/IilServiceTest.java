@@ -160,5 +160,18 @@ public class IilServiceTest {
         verify(this.iilRepository, never()).save(any());
     }
 
-    
+    /**
+     * Test that we can successfully delete an existing iil.
+     */
+    @Test
+    void testDelete() {
+        doReturn(Optional.of(this.existingIil)).when(this.iilRepository).findById(this.existingIil.getId());
+        doNothing().when(this.iilRepository).deleteById(this.existingIil.getId());
+
+        // Perform the service call
+        this.iilService.delete(this.existingIil.getId());
+
+        // Verify that a deletion call took place in the repository
+        verify(this.iilRepository, times(1)).deleteById(this.existingIil.getId());
+    }
 }
