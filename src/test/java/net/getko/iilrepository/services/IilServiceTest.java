@@ -174,4 +174,16 @@ public class IilServiceTest {
         // Verify that a deletion call took place in the repository
         verify(this.iilRepository, times(1)).deleteById(this.existingIil.getId());
     }
+
+    /**
+     * Test that if we try to delete a non-existing instance then a DataNotFound
+     * exception will be thrown.
+     */
+    @Test
+    void testDeleteNotFound() {
+        // Perform the service call
+        assertThrows(DataNotFoundException.class, () ->
+                this.iilService.delete(this.newIil.getId())
+        );
+    }
 }
