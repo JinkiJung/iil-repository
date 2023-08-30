@@ -3,6 +3,7 @@ package net.getko.iilrepository.services;
 import net.getko.iilrepository.exceptions.ActionValidationException;
 import net.getko.iilrepository.exceptions.ConditionValidationException;
 import net.getko.iilrepository.exceptions.DataNotFoundException;
+import net.getko.iilrepository.exceptions.NoCorrespondingGoalException;
 import net.getko.iilrepository.models.domain.Iil;
 import net.getko.iilrepository.repositories.IilRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
@@ -139,4 +141,24 @@ public class IilServiceTest {
         // And also that no saving calls took place in the repository
         verify(this.iilRepository, never()).save(any());
     }
+
+    /**
+     * Test that when we are trying to register an iil with existing ID
+     * a DuplicationKeyException will be thrown.
+     */
+    @Test
+    void testSaveWithInvalidGoal() {
+        doReturn(Optional.of(this.newIil)).when(this.iilRepository).findById(this.newIil.getId());
+
+        this.newIil.setGoal(UUID.randomUUID());
+        // Perform the service call
+        assertThrows(NoCorrespondingGoalException.class, () ->
+                this.iilService.save(this.newIil)
+        );
+
+        // And also that no saving calls took place in the repository
+        verify(this.iilRepository, never()).save(any());
+    }
+
+    
 }

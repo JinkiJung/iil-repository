@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.getko.iilrepository.exceptions.ActionValidationException;
 import net.getko.iilrepository.exceptions.ConditionValidationException;
 import net.getko.iilrepository.exceptions.DataNotFoundException;
-import net.getko.iilrepository.exceptions.DuplicatedDataException;
+import net.getko.iilrepository.exceptions.NoCorrespondingGoalException;
 import net.getko.iilrepository.models.domain.Action;
 import net.getko.iilrepository.models.domain.Condition;
 import net.getko.iilrepository.models.domain.Iil;
@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -57,7 +56,7 @@ public class IilService {
     @Transactional
     public Iil create(Iil iil) throws ActionValidationException, ConditionValidationException {
         if (iil.getId() != null && this.iilRepository.findById(iil.getId()).isPresent()) {
-            throw new DuplicatedDataException("Duplicate data detected");
+            throw new NoCorrespondingGoalException("Duplicate data detected");
         }
 
         // The save and return
@@ -99,7 +98,7 @@ public class IilService {
         }
 
         if (iil.getGoal() != null && !this.iilRepository.findById(iil.getGoal()).isPresent()) {
-            throw new IllegalArgumentException("No iil corresponding to goal");
+            throw new NoCorrespondingGoalException("No iil corresponding to goal");
         }
 
         if (iil.getAct() != null) {

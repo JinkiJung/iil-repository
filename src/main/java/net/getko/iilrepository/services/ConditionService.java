@@ -2,8 +2,7 @@ package net.getko.iilrepository.services;
 
 import lombok.extern.slf4j.Slf4j;
 import net.getko.iilrepository.exceptions.DataNotFoundException;
-import net.getko.iilrepository.exceptions.DuplicatedDataException;
-import net.getko.iilrepository.models.domain.Action;
+import net.getko.iilrepository.exceptions.NoCorrespondingGoalException;
 import net.getko.iilrepository.models.domain.Condition;
 import net.getko.iilrepository.repositories.ConditionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +49,7 @@ public class ConditionService {
     @Transactional
     public Condition create(Condition condition) {
         if (condition.getId() != null && this.conditionRepository.findById(condition.getId()).isPresent()) {
-            throw new DuplicatedDataException("Duplicate data detected");
+            throw new NoCorrespondingGoalException("Duplicate data detected");
         }
         // The save and return
         return this.conditionRepository.save(condition);

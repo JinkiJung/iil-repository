@@ -2,7 +2,7 @@ package net.getko.iilrepository.services;
 
 import lombok.extern.slf4j.Slf4j;
 import net.getko.iilrepository.exceptions.DataNotFoundException;
-import net.getko.iilrepository.exceptions.DuplicatedDataException;
+import net.getko.iilrepository.exceptions.NoCorrespondingGoalException;
 import net.getko.iilrepository.models.domain.Action;
 import net.getko.iilrepository.repositories.ActionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +50,7 @@ public class ActionService {
     @Transactional
     public Action create(Action action) {
         if (action.getId() != null && this.actionRepository.findById(action.getId()).isPresent()) {
-            throw new DuplicatedDataException("Duplicate data detected");
+            throw new NoCorrespondingGoalException("Duplicate data detected");
         }
         // The save and return
         return this.actionRepository.save(action);

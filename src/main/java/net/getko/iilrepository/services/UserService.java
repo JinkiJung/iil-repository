@@ -2,8 +2,6 @@ package net.getko.iilrepository.services;
 
 import lombok.extern.slf4j.Slf4j;
 import net.getko.iilrepository.exceptions.DataNotFoundException;
-import net.getko.iilrepository.exceptions.DuplicatedDataException;
-import net.getko.iilrepository.models.domain.Iil;
 import net.getko.iilrepository.models.domain.User;
 import net.getko.iilrepository.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
