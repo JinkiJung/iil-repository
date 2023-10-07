@@ -126,6 +126,11 @@ public class Iil{
     @Basic(fetch = FetchType.LAZY)
     private Map<String, Object> output;
 
+    @Type(type = "jsonb")
+    @Column(name = "variable", columnDefinition = "jsonb")
+    @Basic(fetch = FetchType.LAZY)
+    private Map<String, Object> variable;
+
     @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
     @Column(name = "maintainer")
     private String maintainer;

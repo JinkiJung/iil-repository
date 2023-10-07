@@ -26,7 +26,7 @@ public class Condition {
     private UUID id;
 
     @Column(name = "type")
-    private String type;
+    private ConditionType type;
 
     @Column(name = "shortName")
     private String shortName;

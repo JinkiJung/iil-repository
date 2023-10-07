@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.getko.iilrepository.exceptions.DataNotFoundException;
 import net.getko.iilrepository.exceptions.NoCorrespondingGoalException;
 import net.getko.iilrepository.models.domain.Condition;
+import net.getko.iilrepository.models.domain.ConditionType;
 import net.getko.iilrepository.repositories.ConditionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.config.ConfigDataNotFoundException;
@@ -34,6 +35,12 @@ public class ConditionService {
         log.debug("Request to get an condition : {}", id);
         return Optional.ofNullable(id).map(this.conditionRepository::findById).get()
                 .orElseThrow(() -> new DataNotFoundException("No condition found for the provided ID"));
+    }
+
+    @Transactional(readOnly = true)
+    public List<Condition> findByType(ConditionType type) throws ConfigDataNotFoundException {
+        log.debug("Request to get an condition : {}", type);
+        return this.conditionRepository.findByType(type.toString());
     }
 
     @Transactional

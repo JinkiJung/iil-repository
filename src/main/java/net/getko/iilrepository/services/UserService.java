@@ -29,7 +29,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User findOne(UUID id) throws ConfigDataNotFoundException {
-        log.debug("Request to get Instance : {}", id);
+        log.debug("Request to get user : {}", id);
         return Optional.ofNullable(id).map(this.userRepository::findById).get()
                 .orElseThrow(() -> new DataNotFoundException("No user found for the provided ID"));
     }
@@ -41,7 +41,7 @@ public class UserService {
 
     @Transactional(propagation = Propagation.NESTED)
     public void delete(UUID id) throws DataNotFoundException {
-        log.debug("Request to delete Instance : {}", id);
+        log.debug("Request to delete user : {}", id);
 
         this.userRepository.findById(id)
                 .map(User::getId)

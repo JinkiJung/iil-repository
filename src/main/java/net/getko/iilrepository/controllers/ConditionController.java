@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import net.getko.iilrepository.components.DomainDtoMapper;
 import net.getko.iilrepository.models.domain.Condition;
+import net.getko.iilrepository.models.domain.ConditionType;
 import net.getko.iilrepository.models.dto.ConditionDto;
 import net.getko.iilrepository.services.ConditionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,15 @@ public class ConditionController {
     public ResponseEntity<List<ConditionDto>> getConditions() {
         log.debug("REST request to get a list of conditions");
         final List<Condition> conditions = this.conditionService.findAll();
+        return ResponseEntity.ok()
+                .body(this.conditionDomainToDtoMapper.convertToList(conditions, ConditionDto.class));
+    }
+
+    // get conditions by type
+    @GetMapping(value = "/{type}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<ConditionDto>> getConditionsByType(@PathVariable String type) {
+        log.debug("REST request to get a list of conditions by type");
+        final List<Condition> conditions = this.conditionService.findByType(ConditionType.valueOf(type));
         return ResponseEntity.ok()
                 .body(this.conditionDomainToDtoMapper.convertToList(conditions, ConditionDto.class));
     }

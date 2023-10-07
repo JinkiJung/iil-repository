@@ -1,6 +1,7 @@
 package net.getko.iilrepository.models.dto;
 
 import lombok.Data;
+import net.getko.iilrepository.models.domain.ConditionType;
 
 import java.util.UUID;
 
@@ -17,7 +18,7 @@ public class ConditionDto {
 
     private String name;
 
-    private String type;
+    private ConditionType type;
 
     private String code;
 }

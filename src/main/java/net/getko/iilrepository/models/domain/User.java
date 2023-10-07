@@ -21,7 +21,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "users")
+@Table(name = "iiluser")
 @Indexed
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

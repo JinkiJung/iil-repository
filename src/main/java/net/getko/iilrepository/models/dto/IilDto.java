@@ -37,6 +37,8 @@ public class IilDto implements Serializable {
 
     private Map<String, Object> output;
 
+    private Map<String, Object> variable;
+
     private String maintainer;
 
     private String owner;

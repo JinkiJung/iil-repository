@@ -1,8 +1,8 @@
 package net.getko.iilrepository.models.domain;
 
 public enum IilState {
-    NOTACTIVATED("notactivated"),
-    ACTIVE("active"),
+    NOT_ACTIVATED("not_activated"),
+    ACTIVATED("activated"),
     PENDING("pending"),
     FINISHED("finished"),
     ABORTED("aborted");
