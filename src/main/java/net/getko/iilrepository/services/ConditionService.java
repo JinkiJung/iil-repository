@@ -31,7 +31,7 @@ public class ConditionService {
     }
 
     @Transactional(readOnly = true)
-    public Condition findOne(UUID id) throws ConfigDataNotFoundException {
+    public Condition findById(UUID id) throws ConfigDataNotFoundException {
         log.debug("Request to get an condition : {}", id);
         return Optional.ofNullable(id).map(this.conditionRepository::findById).get()
                 .orElseThrow(() -> new DataNotFoundException("No condition found for the provided ID"));
@@ -40,7 +40,7 @@ public class ConditionService {
     @Transactional(readOnly = true)
     public List<Condition> findByType(ConditionType type) throws ConfigDataNotFoundException {
         log.debug("Request to get an condition : {}", type);
-        return this.conditionRepository.findByType(type.toString());
+        return this.conditionRepository.findByType(type);
     }
 
     @Transactional

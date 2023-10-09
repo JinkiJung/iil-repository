@@ -28,7 +28,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User findOne(UUID id) throws ConfigDataNotFoundException {
+    public User findById(UUID id) throws ConfigDataNotFoundException {
         log.debug("Request to get user : {}", id);
         return Optional.ofNullable(id).map(this.userRepository::findById).get()
                 .orElseThrow(() -> new DataNotFoundException("No user found for the provided ID"));

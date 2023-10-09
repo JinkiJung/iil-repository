@@ -31,7 +31,7 @@ public class ActionService {
     }
 
     @Transactional(readOnly = true)
-    public Action findOne(UUID id) throws ConfigDataNotFoundException {
+    public Action findById(UUID id) throws ConfigDataNotFoundException {
         log.debug("Request to get an action : {}", id);
         return Optional.ofNullable(id).map(this.actionRepository::findById).get()
                 .orElseThrow(() -> new DataNotFoundException("No action found for the provided ID"));

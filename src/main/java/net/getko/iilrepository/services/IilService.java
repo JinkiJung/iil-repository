@@ -41,7 +41,7 @@ public class IilService {
     }
 
     @Transactional(readOnly = true)
-    public Iil findOne(UUID id) throws ConfigDataNotFoundException {
+    public Iil findById(UUID id) throws ConfigDataNotFoundException {
         log.debug("Request to get iil : {}", id);
         return Optional.ofNullable(id).map(this.iilRepository::findById).get()
                 .orElseThrow(() -> new DataNotFoundException("No iil found for the provided ID"));
@@ -106,7 +106,7 @@ public class IilService {
                 Action action = actionService.createWithNewId(iil.getAct());
                 iil.setAct(action);
             } else {
-                Action fetched = actionService.findOne(iil.getAct().getId());
+                Action fetched = actionService.findById(iil.getAct().getId());
                 if (fetched == null) {
                     throw new IllegalArgumentException("No action corresponding to the given ID from act");
                 } else {

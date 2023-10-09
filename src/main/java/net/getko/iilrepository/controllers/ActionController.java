@@ -1,13 +1,10 @@
 package net.getko.iilrepository.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import net.getko.iilrepository.components.DomainDtoMapper;
 import net.getko.iilrepository.models.domain.Action;
-import net.getko.iilrepository.models.domain.Iil;
 import net.getko.iilrepository.models.dto.ActionDto;
-import net.getko.iilrepository.models.dto.IilDto;
 import net.getko.iilrepository.services.ActionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -24,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -51,7 +47,7 @@ public class ActionController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ActionDto> getAction(@PathVariable UUID id) {
         log.debug("REST request to get an action : {}", id);
-        final Action result = this.actionService.findOne(id);
+        final Action result = this.actionService.findById(id);
         return ResponseEntity.ok()
                 .body(this.actionDomainToDtoMapper.convertTo(result, ActionDto.class));
     }

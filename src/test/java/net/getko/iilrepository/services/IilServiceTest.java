@@ -65,7 +65,7 @@ public class IilServiceTest {
 
         this.existingIil = new Iil();
         this.existingIil.setId(UUID.fromString("2110e38a-c9d4-43e1-ba5c-4741843281d1"));
-        this.existingIil.setActor(testUser1.toString());
+        this.existingIil.setActor(testUser2.toString());
     }
 
     /**
@@ -87,7 +87,7 @@ public class IilServiceTest {
         doReturn(Optional.of(this.existingIil)).when(this.iilRepository).findById(this.existingIil.getId());
 
         // Perform the service call
-        Iil result = this.iilService.findOne(this.existingIil.getId());
+        Iil result = this.iilService.findById(this.existingIil.getId());
 
         // Make sure the eager relationships repo call was called
         verify(this.iilRepository, times(1)).findById(this.existingIil.getId());

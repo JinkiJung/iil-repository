@@ -9,6 +9,7 @@ import net.getko.iilrepository.models.dto.ConditionDto;
 import net.getko.iilrepository.services.ConditionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -46,18 +47,28 @@ public class ConditionController {
     }
 
     // get conditions by type
-    @GetMapping(value = "/{type}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/type/{type}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ConditionDto>> getConditionsByType(@PathVariable String type) {
         log.debug("REST request to get a list of conditions by type");
-        final List<Condition> conditions = this.conditionService.findByType(ConditionType.valueOf(type));
-        return ResponseEntity.ok()
-                .body(this.conditionDomainToDtoMapper.convertToList(conditions, ConditionDto.class));
+        ConditionType conditionType;
+        try {
+            conditionType = ConditionType.valueOf(type.toUpperCase());
+            final List<Condition> conditions = this.conditionService.findByType(conditionType);
+            return ResponseEntity.ok()
+                    .body(this.conditionDomainToDtoMapper.convertToList(conditions, ConditionDto.class));
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            // return bad request with text "given type is not valid" when type is not on ConditionType
+            return ResponseEntity
+                    .badRequest()
+                    .body(null);
+        }
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ConditionDto> getCondition(@PathVariable UUID id) {
         log.debug("REST request to get an condition : {}", id);
-        final Condition result = this.conditionService.findOne(id);
+        final Condition result = this.conditionService.findById(id);
         return ResponseEntity.ok()
                 .body(this.conditionDomainToDtoMapper.convertTo(result, ConditionDto.class));
     }

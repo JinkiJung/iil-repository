@@ -20,6 +20,6 @@ public interface ConditionRepository extends JpaRepository<Condition, UUID> {
     @Query("select distinct condition " +
             "from Condition condition " +
             "where condition.type = :type")
-    List<Condition> findByType(@Param("type") String type);
+    List<Condition> findByType(@Param("type") ConditionType type);
 }
 

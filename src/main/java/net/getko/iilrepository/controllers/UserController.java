@@ -2,9 +2,7 @@ package net.getko.iilrepository.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import net.getko.iilrepository.components.DomainDtoMapper;
-import net.getko.iilrepository.models.domain.Iil;
 import net.getko.iilrepository.models.domain.User;
-import net.getko.iilrepository.models.dto.IilDto;
 import net.getko.iilrepository.models.dto.UserDto;
 import net.getko.iilrepository.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +47,7 @@ public class UserController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDto> getUser(@PathVariable UUID id) {
         log.debug("REST request to get a user : {}", id);
-        final User result = this.userService.findOne(id);
+        final User result = this.userService.findById(id);
         return ResponseEntity.ok()
                 .body(this.userDomainToDtoMapper.convertTo(result, UserDto.class));
     }

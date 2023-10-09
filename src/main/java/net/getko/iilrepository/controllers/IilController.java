@@ -53,7 +53,7 @@ public class IilController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<IilDto> getIil(@PathVariable UUID id) {
         log.debug("REST request to get an iil : {}", id);
-        final Iil result = this.iilService.findOne(id);
+        final Iil result = this.iilService.findById(id);
         return ResponseEntity.ok()
                 .body(this.iilDomainToDtoMapper.convertTo(result, IilDto.class));
     }
