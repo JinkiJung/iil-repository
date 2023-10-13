@@ -21,8 +21,6 @@ import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -94,7 +92,6 @@ public class Iil{
     private String namespace;
 
     @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true, fetch=FetchType.LAZY)
-    @JoinColumn(unique = true)
     private Condition activateIf;
     // 결과: 상태 변경, 보고
 
@@ -104,7 +101,6 @@ public class Iil{
     private Map<String, Object> input;
 
     @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true, fetch=FetchType.LAZY)
-    @JoinColumn(unique = true)
     private Action act;
     // 네임스페이스 존재, 호환성 보장
 
@@ -113,12 +109,10 @@ public class Iil{
     private String actor;
 
     @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true, fetch=FetchType.LAZY)
-    @JoinColumn(unique = true)
     private Condition finishIf;
     // 결과: 상태 변경, 보고, 플로우 시작
 
     @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true, fetch=FetchType.LAZY)
-    @JoinColumn(unique = true)
     private Condition abortIf;
 
     @Type(type = "jsonb")
