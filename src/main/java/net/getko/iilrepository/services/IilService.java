@@ -8,6 +8,7 @@ import net.getko.iilrepository.exceptions.NoCorrespondingGoalException;
 import net.getko.iilrepository.models.domain.Action;
 import net.getko.iilrepository.models.domain.Condition;
 import net.getko.iilrepository.models.domain.Iil;
+import net.getko.iilrepository.repositories.ConditionRepository;
 import net.getko.iilrepository.repositories.IilRepository;
 import net.getko.iilrepository.utils.ActionValidator;
 import net.getko.iilrepository.utils.ConditionValidator;
@@ -25,6 +26,8 @@ import java.util.UUID;
 @Slf4j
 @Transactional
 public class IilService {
+    @Autowired
+    private ConditionRepository conditionRepository;
     @Autowired
     IilRepository iilRepository;
 
@@ -119,6 +122,14 @@ public class IilService {
             if (iil.getActivateIf().getId() == null) {
                 Condition condition = conditionService.createWithNewId(iil.getActivateIf());
                 iil.setActivateIf(condition);
+            } else {
+                // fetch the condition corresponding to the id of activateIf from condition repository
+                Condition fetched = conditionService.findById(iil.getActivateIf().getId());
+                if (fetched == null) {
+                    throw new IllegalArgumentException("No condition corresponding to the given ID from activateIf");
+                } else {
+                    iil.setActivateIf(fetched);
+                }
             }
         }
 
@@ -126,6 +137,13 @@ public class IilService {
             if (iil.getFinishIf().getId() == null) {
                 Condition condition = conditionService.createWithNewId(iil.getFinishIf());
                 iil.setFinishIf(condition);
+            } else {
+                Condition fetched = conditionService.findById(iil.getFinishIf().getId());
+                if (fetched == null) {
+                    throw new IllegalArgumentException("No condition corresponding to the given ID from finishIf");
+                } else {
+                    iil.setFinishIf(fetched);
+                }
             }
         }
 
@@ -133,6 +151,13 @@ public class IilService {
             if (iil.getAbortIf().getId() == null) {
                 Condition condition = conditionService.createWithNewId(iil.getAbortIf());
                 iil.setAbortIf(condition);
+            } else {
+                Condition fetched = conditionService.findById(iil.getAbortIf().getId());
+                if (fetched == null) {
+                    throw new IllegalArgumentException("No condition corresponding to the given ID from abortIf");
+                } else {
+                    iil.setAbortIf(fetched);
+                }
             }
         }
 
