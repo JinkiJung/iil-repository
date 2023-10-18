@@ -28,7 +28,6 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -91,7 +90,7 @@ public class Iil{
     @Column(name = "namespace")
     private String namespace;
 
-    @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true, fetch=FetchType.LAZY)
+    @OneToOne(fetch=FetchType.LAZY)
     private Condition activateIf;
     // 결과: 상태 변경, 보고
 
@@ -100,7 +99,7 @@ public class Iil{
     @Basic(fetch = FetchType.LAZY)
     private Map<String, Object> input;
 
-    @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true, fetch=FetchType.LAZY)
+    @OneToOne(fetch=FetchType.LAZY)
     private Action act;
     // 네임스페이스 존재, 호환성 보장
 
@@ -108,11 +107,11 @@ public class Iil{
     @Column(name = "actor")
     private String actor;
 
-    @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true, fetch=FetchType.LAZY)
+    @OneToOne(fetch=FetchType.LAZY)
     private Condition finishIf;
     // 결과: 상태 변경, 보고, 플로우 시작
 
-    @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true, fetch=FetchType.LAZY)
+    @OneToOne(fetch=FetchType.LAZY)
     private Condition abortIf;
 
     @Type(type = "jsonb")
