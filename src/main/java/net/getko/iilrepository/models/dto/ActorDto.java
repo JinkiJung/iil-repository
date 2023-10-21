@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Data
-public class UserDto implements Serializable {
+public class ActorDto implements Serializable {
     private UUID id;
     private String name;
     private String email;

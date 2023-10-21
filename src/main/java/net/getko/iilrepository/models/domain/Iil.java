@@ -21,6 +21,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -103,9 +104,8 @@ public class Iil{
     private Action act;
     // 네임스페이스 존재, 호환성 보장
 
-    @KeywordField(sortable = org.hibernate.search.engine.backend.types.Sortable.YES)
-    @Column(name = "actor")
-    private String actor;
+    @ManyToOne(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+    private Actor actor;
 
     @OneToOne(fetch=FetchType.LAZY)
     private Condition finishIf;

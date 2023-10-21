@@ -14,21 +14,50 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 import java.util.UUID;
 
+@NoArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "iiluser")
+@Table(name = "actor")
 @Indexed
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Data
-public class User extends Actor {
-    public User() {
-        this.isGroup = false;
-    }
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Actor {
+    @Id
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", columnDefinition = "uuid")
+    protected UUID id;
+
+    @Column
+    @NotNull
+    protected String name;
+
+    @Column
+    @NotNull
+    protected String email;
+
+    @Column
+    @NotNull
+    protected boolean isGroup;
+
+    @Column
+    protected String iconLink;
+
+    @OneToMany(mappedBy = "actor")
+    protected Set<Iil> iilList;
+
+    // override hashcode and equals method in Actor class
+    // to make sure that two actors with the same id are equal
 
     @Override
     public int hashCode() {
@@ -38,6 +67,6 @@ public class User extends Actor {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Actor)) return false;
-        return this.id != null && this.id.equals(((Actor) o).getId());
+        return id != null && id.equals(((Actor) o).getId());
     }
 }

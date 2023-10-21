@@ -4,7 +4,10 @@ import net.getko.iilrepository.exceptions.ActionValidationException;
 import net.getko.iilrepository.exceptions.ConditionValidationException;
 import net.getko.iilrepository.exceptions.DataNotFoundException;
 import net.getko.iilrepository.exceptions.NoCorrespondingGoalException;
+import net.getko.iilrepository.models.domain.Actor;
 import net.getko.iilrepository.models.domain.Iil;
+import net.getko.iilrepository.models.domain.User;
+import net.getko.iilrepository.models.domain.UserGroup;
 import net.getko.iilrepository.repositories.IilRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,26 +49,28 @@ public class IilServiceTest {
     private Iil newIil;
     private Iil existingIil;
 
-    private UUID testUser1 = UUID.randomUUID();
-    private UUID testUser2 = UUID.randomUUID();
-
+    private Actor testActor1;
     @BeforeEach
     void setup() {
+        this.testActor1 = new User();
+        this.testActor1.setId(UUID.fromString("e91ab6d1-2585-422e-94a7-e538cbf284c3"));
+        this.testActor1.setName("test user");
+
         this.iilList = new ArrayList<>();
         for(long i=0; i<10 ; i++) {
             Iil iil = new Iil();
             iil.setId(UUID.randomUUID());
-            iil.setActor(testUser1.toString());
+            iil.setActor(testActor1);
             this.iilList.add(iil);
         }
 
         this.newIil = new Iil();
         this.newIil.setId(UUID.fromString("e91ab6d1-2585-422e-94a7-e538cbf284c3"));
-        this.newIil.setActor(testUser1.toString());
+        this.newIil.setActor(testActor1);
 
         this.existingIil = new Iil();
         this.existingIil.setId(UUID.fromString("2110e38a-c9d4-43e1-ba5c-4741843281d1"));
-        this.existingIil.setActor(testUser2.toString());
+        this.existingIil.setActor(testActor1);
     }
 
     /**
