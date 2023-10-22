@@ -6,6 +6,7 @@ import net.getko.iilrepository.exceptions.ConditionValidationException;
 import net.getko.iilrepository.exceptions.DataNotFoundException;
 import net.getko.iilrepository.exceptions.NoCorrespondingGoalException;
 import net.getko.iilrepository.models.domain.Action;
+import net.getko.iilrepository.models.domain.Actor;
 import net.getko.iilrepository.models.domain.Condition;
 import net.getko.iilrepository.models.domain.Iil;
 import net.getko.iilrepository.repositories.ConditionRepository;
@@ -36,6 +37,9 @@ public class IilService {
 
     @Autowired
     ConditionService conditionService;
+
+    @Autowired
+    ActorService actorService;
 
     @Transactional(readOnly = true)
     public List<Iil> findAll() {
@@ -102,6 +106,16 @@ public class IilService {
 
         if (iil.getGoal() != null && !this.iilRepository.findById(iil.getGoal()).isPresent()) {
             throw new NoCorrespondingGoalException("No iil corresponding to goal");
+        }
+
+        if (iil.getActor() != null) {
+            // if the actor doesn't exist throw illegalargumentexception
+            Actor fetched = actorService.findById(iil.getActor().getId());
+            if (fetched == null) {
+                throw new IllegalArgumentException("No actor corresponding to the given ID from actor");
+            } else {
+                iil.setActor(fetched);
+            }
         }
 
         if (iil.getAct() != null) {
