@@ -149,18 +149,32 @@ public class ActorServiceTest {
     @Test
     void testAddUserToGroup() throws DataNotFoundException {
         doAnswer(i -> i.getArguments()[0]).when(this.userGroupRepository).save(any());
-        doReturn(Optional.of(this.existingUser)).when(this.userRepository).findById(this.existingUser.getId());
+        doReturn(Optional.of(this.newUser)).when(this.userRepository).findById(this.newUser.getId());
         doReturn(Optional.of(this.existingUserGroup)).when(this.userGroupRepository).findById(this.existingUserGroup.getId());
 
         // Execute the service call
-        Actor returnedUserGroup = this.actorService.addUserToGroup(this.existingUser.getId(), this.existingUserGroup.getId());
+        Actor returnedUserGroup = this.actorService.addUserToGroup(this.newUser.getId(), this.existingUserGroup.getId());
 
         // Assert the response
         assertNotNull(returnedUserGroup, "User group was not found");
         assertEquals(this.existingUserGroup, returnedUserGroup, "User group returned was not the same as the mock");
-        assertEquals(1, ((UserGroup)returnedUserGroup).getUserList().size(), "User group did not have the expected number of members");
+        assertEquals(2, ((UserGroup)returnedUserGroup).getUserList().size(), "User group did not have the expected number of members");
         // check if the existing user is contained in user group
         assertEquals(true, (((UserGroup)returnedUserGroup).getUserList().contains(this.existingUser)), "User group did not have the expected member");
+    }
+
+    /**
+     * Test that duplicated addition of users throws an error
+     */
+    @Test
+    void testAddDuplicatedUser() throws DuplicateKeyException {
+        doReturn(Optional.of(this.existingUser)).when(this.userRepository).findById(this.existingUser.getId());
+        doReturn(Optional.of(this.existingUserGroup)).when(this.userGroupRepository).findById(this.existingUserGroup.getId());
+
+        // Execute the service call
+        assertThrows(DuplicateKeyException.class, () ->
+                this.actorService.addUserToGroup(this.existingUser.getId(), this.existingUserGroup.getId())
+        );
     }
 
     /**
