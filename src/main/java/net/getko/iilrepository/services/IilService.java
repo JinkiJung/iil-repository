@@ -9,6 +9,7 @@ import net.getko.iilrepository.models.domain.Action;
 import net.getko.iilrepository.models.domain.Actor;
 import net.getko.iilrepository.models.domain.Condition;
 import net.getko.iilrepository.models.domain.Iil;
+import net.getko.iilrepository.models.domain.IilState;
 import net.getko.iilrepository.repositories.ConditionRepository;
 import net.getko.iilrepository.repositories.IilRepository;
 import net.getko.iilrepository.utils.ActionValidator;
@@ -68,6 +69,15 @@ public class IilService {
 
         // The save and return
         return this.save(iil);
+    }
+
+    public void updateState(Iil iil, IilState state) {
+        // it is only possible to change to ACTIVATED only if there is an actor assigned
+        if (state != IilState.NOT_ACTIVATED && iil.getActor() == null) {
+            throw new IllegalArgumentException("Cannot change state to ACTIVATED without an actor");
+        }
+        iil.setState(state);
+        this.iilRepository.save(iil);
     }
 
     public void validateIil(Iil iil) throws ConditionValidationException, ActionValidationException {

@@ -31,7 +31,7 @@ public class IilDto implements Serializable {
 
     private ActionDto act;
 
-    private Actor actor;
+    private ActorDto actor;
 
     private ConditionDto finishIf;
 

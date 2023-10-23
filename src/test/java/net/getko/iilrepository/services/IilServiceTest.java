@@ -6,6 +6,7 @@ import net.getko.iilrepository.exceptions.DataNotFoundException;
 import net.getko.iilrepository.exceptions.NoCorrespondingGoalException;
 import net.getko.iilrepository.models.domain.Actor;
 import net.getko.iilrepository.models.domain.Iil;
+import net.getko.iilrepository.models.domain.IilState;
 import net.getko.iilrepository.models.domain.User;
 import net.getko.iilrepository.models.domain.UserGroup;
 import net.getko.iilrepository.repositories.IilRepository;
@@ -189,6 +190,19 @@ public class IilServiceTest {
         // Perform the service call
         assertThrows(DataNotFoundException.class, () ->
                 this.iilService.delete(this.newIil.getId())
+        );
+    }
+
+    /**
+     * Test when an iil changes its state from NOT_ACTIVE to ACTIVE without actor assigned, an IllegalArgumentException will be thrown.
+     */
+    @Test
+    void testUpdateStateNotActiveToActiveWithoutActor() {
+        this.existingIil.setState(IilState.NOT_ACTIVATED);
+        this.existingIil.setActor(null);
+        // Perform the service call
+        assertThrows(IllegalArgumentException.class, () ->
+                this.iilService.updateState(this.existingIil, IilState.ACTIVATED)
         );
     }
 }
