@@ -101,7 +101,7 @@ public class ActorControllerTest {
         this.newUserGroup = new UserGroup();
         this.newUserGroup.setId(UUID.randomUUID());
         this.newUserGroup.setName("new user group");
-        this.newUserGroup.setEmail("tes_user_group_@test.com");
+        this.newUserGroup.setEmail("test_user_group_@test.com");
         Set<Actor> actorList = new HashSet<>();
         actorList.add(this.existingActor);
         this.newUserGroup.setActorList(actorList);

@@ -5,6 +5,7 @@ import net.getko.iilrepository.exceptions.DataNotFoundException;
 import net.getko.iilrepository.models.domain.Actor;
 import net.getko.iilrepository.models.domain.User;
 import net.getko.iilrepository.models.domain.UserGroup;
+import net.getko.iilrepository.models.dto.ActorDto;
 import net.getko.iilrepository.repositories.UserGroupRepository;
 import net.getko.iilrepository.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -96,21 +98,62 @@ public class ActorService {
     }
 
     @Transactional
-    public Actor addUserToGroup(UUID userId, UUID groupId) throws DataNotFoundException, DuplicateKeyException {
+    public Actor addUsersToGroup(UUID groupId, List<UUID> actorIdList) throws DataNotFoundException {
+        // add users in actorDtoList to the group using addUserToGroup(), allowing duplicate key exception, not DataNotFoundException
+        UserGroup userGroup = this.userGroupRepository.findById(groupId)
+                .orElseThrow(() -> new DataNotFoundException("No user group found for the provided ID"));
+        actorIdList.forEach(userId -> {
+            try {
+                User user = this.userRepository.findById(userId)
+                        .orElseThrow(() -> new DataNotFoundException("No user found for the provided ID"));
+                if (!userGroup.getActorList().contains(user)) {
+                    userGroup.addUser(user);
+                }
+            } catch (DataNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+        return this.update(userGroup);
+    }
+
+    @Transactional
+    public Actor removeUsersFromGroup(UUID groupId, List<UUID> actorIdList) throws DataNotFoundException {
+        // remove users in actorDtoList from the group using removeUserFromGroup(), allowing duplicate key exception, not DataNotFoundException
+        UserGroup userGroup = this.userGroupRepository.findById(groupId)
+                .orElseThrow(() -> new DataNotFoundException("No user group found for the provided ID"));
+        List<User> users = new ArrayList<>();
+        actorIdList.forEach(userId -> {
+            try {
+                User user = this.userRepository.findById(userId)
+                        .orElseThrow(() -> new DataNotFoundException("No user found for the provided ID"));
+                users.add(user);
+            } catch (DataNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+        users.forEach(user -> {
+            userGroup.removeUser(user);
+        });
+        return this.update(userGroup);
+    }
+
+    @Transactional
+    public Actor addUserToGroup(UUID groupId, UUID userId) throws DataNotFoundException, DuplicateKeyException {
         User user = this.userRepository.findById(userId)
                 .orElseThrow(() -> new DataNotFoundException("No user found for the provided ID"));
         UserGroup userGroup = this.userGroupRepository.findById(groupId)
                 .orElseThrow(() -> new DataNotFoundException("No user group found for the provided ID"));
-        if (userGroup.getActorList().contains(user)) {
-            throw new DuplicateKeyException("User is already in the group");
+        if (!userGroup.getActorList().contains(user)) {
+            userGroup.addUser(user);
+            return this.save(userGroup);
+        } else {
+            throw new DuplicateKeyException("User already exists in the group");
         }
-        userGroup.addUser(user);
-        return this.save(userGroup);
     }
 
     // remove user from group
     @Transactional
-    public Actor removeUserFromGroup(UUID userId, UUID groupId) throws DataNotFoundException {
+    public Actor removeUserFromGroup(UUID groupId, UUID userId) throws DataNotFoundException {
         User user = this.userRepository.findById(userId)
                 .orElseThrow(() -> new DataNotFoundException("No user found for the provided ID"));
         UserGroup userGroup = this.userGroupRepository.findById(groupId)

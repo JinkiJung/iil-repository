@@ -7,6 +7,7 @@ import net.getko.iilrepository.models.domain.UserGroup;
 import net.getko.iilrepository.repositories.UserGroupRepository;
 import net.getko.iilrepository.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -150,7 +151,7 @@ public class ActorServiceTest {
         doReturn(Optional.of(this.existingUserGroup)).when(this.userGroupRepository).findById(this.existingUserGroup.getId());
 
         // Execute the service call
-        Actor returnedUserGroup = this.actorService.addUserToGroup(this.newUser.getId(), this.existingUserGroup.getId());
+        Actor returnedUserGroup = this.actorService.addUserToGroup(this.existingUserGroup.getId(), this.newUser.getId());
 
         // Assert the response
         assertNotNull(returnedUserGroup, "User group was not found");
@@ -170,7 +171,7 @@ public class ActorServiceTest {
 
         // Execute the service call
         assertThrows(DuplicateKeyException.class, () ->
-                this.actorService.addUserToGroup(this.existingUser.getId(), this.existingUserGroup.getId())
+                this.actorService.addUserToGroup(this.existingUserGroup.getId(), this.existingUser.getId())
         );
     }
 
@@ -207,7 +208,7 @@ public class ActorServiceTest {
         doReturn(Optional.of(this.existingUserGroup)).when(this.userGroupRepository).findById(this.existingUserGroup.getId());
 
         // Execute the service call
-        this.actorService.removeUserFromGroup(this.existingUser.getId(), this.existingUserGroup.getId());
+        this.actorService.removeUserFromGroup(this.existingUserGroup.getId(), this.existingUser.getId());
 
         // Assert the response
         assertEquals(0, ((UserGroup)this.existingUserGroup).getActorList().size(), "User group did not have the expected number of members");
@@ -223,7 +224,7 @@ public class ActorServiceTest {
 
         // Execute the service call
         assertThrows(DataNotFoundException.class, () ->
-                this.actorService.removeUserFromGroup(this.newUser.getId(), this.existingUserGroup.getId())
+                this.actorService.removeUserFromGroup(this.existingUserGroup.getId(), this.newUser.getId())
         );
     }
 
@@ -293,4 +294,43 @@ public class ActorServiceTest {
         assertEquals(this.newUser, returnedUser, "User returned was not the same as the mock");
     }
 
+    @Disabled
+    void testUserUpdate() {
+
+    }
+
+    @Disabled
+    void testUserGroupCreation() {
+
+    }
+
+    @Disabled
+    void testAddNewUsersToUserGroup(){
+
+    }
+
+    @Disabled
+    void testExistingUsersToUserGroup(){
+
+    }
+
+    @Disabled
+    void testRemoveUsersFromUserGroup(){
+
+    }
+
+    @Disabled
+    void testRemoveNonExistingUsersFromUserGroup(){
+
+    }
+
+    @Disabled
+    void testUserGroupDeletion() {
+
+    }
+
+    @Disabled
+    void testUserGroupDeletionCascade() {
+
+    }
 }
