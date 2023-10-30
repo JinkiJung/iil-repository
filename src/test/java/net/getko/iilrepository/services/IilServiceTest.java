@@ -205,4 +205,16 @@ public class IilServiceTest {
                 this.iilService.updateState(this.existingIil, IilState.ACTIVATED)
         );
     }
+
+    /**
+     * Test when an iil changes its state from NOT_ACTIVE to ACTIVE with actor assigned, the state will be updated.
+     */
+    @Test
+    void testUpdateStateNotActiveToActiveWithActor() {
+        this.existingIil.setState(IilState.NOT_ACTIVATED);
+        this.existingIil.setActor(testActor1);
+        // Perform the service call
+        this.iilService.updateState(this.existingIil, IilState.ACTIVATED);
+        assertEquals(IilState.ACTIVATED, this.existingIil.getState());
+    }
 }

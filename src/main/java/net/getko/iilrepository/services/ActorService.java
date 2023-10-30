@@ -57,9 +57,9 @@ public class ActorService {
     @Transactional
     public Actor save(Actor actor) {
         if (actor.isGroup()) {
-            return (Actor)this.userGroupRepository.save((UserGroup)actor);
+            return (Actor)this.userGroupRepository.save(new UserGroup(actor));
         } else {
-            return (Actor)this.userRepository.save((User)actor);
+            return (Actor)this.userRepository.save(new User(actor));
         }
     }
 
@@ -101,7 +101,7 @@ public class ActorService {
                 .orElseThrow(() -> new DataNotFoundException("No user found for the provided ID"));
         UserGroup userGroup = this.userGroupRepository.findById(groupId)
                 .orElseThrow(() -> new DataNotFoundException("No user group found for the provided ID"));
-        if (userGroup.getUserList().contains(user)) {
+        if (userGroup.getActorList().contains(user)) {
             throw new DuplicateKeyException("User is already in the group");
         }
         userGroup.addUser(user);

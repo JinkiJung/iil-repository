@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.stereotype.Indexed;
 
 import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -22,7 +23,6 @@ import javax.validation.constraints.NotNull;
 import java.util.Set;
 import java.util.UUID;
 
-@NoArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "actor")
@@ -31,7 +31,7 @@ import java.util.UUID;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Data
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Actor {
+public class Actor {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
@@ -55,6 +55,13 @@ public abstract class Actor {
 
     @OneToMany(mappedBy = "actor")
     protected Set<Iil> iilList;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    protected Set<Actor> actorList;
+
+    public Actor() {
+
+    }
 
     // override hashcode and equals method in Actor class
     // to make sure that two actors with the same id are equal

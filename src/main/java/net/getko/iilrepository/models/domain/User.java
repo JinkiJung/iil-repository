@@ -30,6 +30,13 @@ public class User extends Actor {
         this.isGroup = false;
     }
 
+    public User(Actor actor) {
+        this.id = actor.getId();
+        this.name = actor.getName();
+        this.email = actor.getEmail();
+        this.isGroup = actor.isGroup();
+        this.iconLink = actor.getIconLink();
+    }
     @Override
     public int hashCode() {
         return this.id.hashCode();

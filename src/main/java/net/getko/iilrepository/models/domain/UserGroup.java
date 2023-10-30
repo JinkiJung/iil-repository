@@ -26,22 +26,46 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Data
 public class UserGroup extends Actor {
-    @OneToMany(cascade = CascadeType.ALL)
-    private Set<User> userList;
 
     public UserGroup() {
         this.isGroup = true;
-        this.userList = new HashSet<>();
+        this.actorList = new HashSet<>();
+    }
+
+    public UserGroup(Actor actor) {
+        this.id = actor.getId();
+        this.name = actor.getName();
+        this.email = actor.getEmail();
+        this.isGroup = actor.isGroup();
+        this.iconLink = actor.getIconLink();
+        if (actor.getActorList() != null) {
+            this.actorList = actor.getActorList();
+        } else {
+            this.actorList = new HashSet<>();
+        }
     }
 
     public void addUser(User user) {
-        this.userList.add(user);
+        // throw exception if user's isGroup is true
+        if (user.isGroup()) {
+            throw new IllegalArgumentException("UserGroup can't be added to another UserGroup");
+        }
+
+        // if actorList does not contain user with same id, add user to the actorList
+        this.actorList.stream().filter(actor -> actor.getId().equals(user.getId())).findFirst().ifPresentOrElse(
+                actor -> {
+                    // do nothing
+                },
+                () -> {
+                    this.actorList.add(user);
+                }
+        );
     }
 
     public void removeUser(User user) throws DataNotFoundException {
         // throws exception when user does not in the userList
-        if (this.userList.contains(user)) {
-            this.userList.remove(user);
+        if (this.actorList.contains(user)) {
+            this.actorList.remove(user);
         } else {
             throw new DataNotFoundException("User does not exist in the group");
         }

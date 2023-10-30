@@ -72,7 +72,7 @@ public class IilController {
             iilDto.setHelp(aboutMap);
             Iil iil = this.iilDtoToDomainMapper.convertTo(iilDto, Iil.class);
             final Iil result = this.iilService.create(iil);
-            return ResponseEntity.ok()
+            return ResponseEntity.created(null)
                     .body(this.iilDomainToDtoMapper.convertTo(result, IilDto.class));
         }  catch (JsonProcessingException e) {
             log.error("Error processing JSON: {}", e.getMessage());
@@ -86,6 +86,10 @@ public class IilController {
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> deleteIil(@PathVariable UUID id) {
         log.debug("REST request to delete an iil : {}", id);
+        if (this.iilService.findById(id) == null) {
+            return ResponseEntity.notFound()
+                    .build();
+        }
         boolean deleted = this.iilService.delete(id);
         if (deleted) {
             HttpHeaders responseHeaders = new HttpHeaders();

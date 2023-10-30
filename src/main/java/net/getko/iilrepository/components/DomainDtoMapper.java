@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  *
  * @param <F>   The FROM object type
  * @param <T>   The TO object type
- * @author Nikolaos Vastardis (email: Nikolaos.Vastardis@gla-rad.org)
+ * @author Jinki Jung
  */
 @Component
 public class DomainDtoMapper<F, T> {

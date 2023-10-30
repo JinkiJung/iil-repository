@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/actor")
+@RequestMapping("/api/actors")
 @Slf4j
 public class ActorController {
 
@@ -57,12 +57,16 @@ public class ActorController {
         log.debug("REST request to get an actor : {}", actorDto);
         Actor actor = this.actorDtoToDomainMapper.convertTo(actorDto, Actor.class);
         final Actor result = this.actorService.save(actor);
-        return ResponseEntity.ok()
+        return ResponseEntity.created(null)
                 .body(this.actorDomainToDtoMapper.convertTo(result, ActorDto.class));
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> deleteActor(@PathVariable UUID id) {
+        if (this.actorService.findById(id) == null) {
+            return ResponseEntity.notFound()
+                    .build();
+        }
         log.debug("REST request to delete actor : {}", id);
         this.actorService.delete(id);
         HttpHeaders responseHeaders = new HttpHeaders();
@@ -82,4 +86,8 @@ public class ActorController {
         return ResponseEntity.ok()
                 .body(this.actorDomainToDtoMapper.convertTo(result, ActorDto.class));
     }
+
+    /**
+     * TODO: add user to user group
+     */
 }

@@ -56,21 +56,18 @@ public class ActorServiceTest {
     void setup() {
         this.users = new ArrayList<>();
         for(int i=0 ; i< names.length ; i++) {
+            Actor actor;
             if (i < names.length/2) {
-                Actor actor = new User();
+                actor = new User();
                 // id should be UUID
-                actor.setId(UUID.randomUUID());
-                actor.setName(names[i]);
-                actor.setEmail(names[i].toLowerCase()+"@example.com");
-                this.users.add(actor);
             } else {
-                Actor actor = new UserGroup();
+                actor = new UserGroup();
                 // id should be UUID
-                actor.setId(UUID.randomUUID());
-                actor.setName(names[i]);
-                actor.setEmail(names[i].toLowerCase()+"@example.com");
-                this.users.add(actor);
             }
+            actor.setId(UUID.randomUUID());
+            actor.setName(names[i]);
+            actor.setEmail(names[i].toLowerCase()+"@example.com");
+            this.users.add(actor);
         }
 
         this.newUser = new User();
@@ -92,7 +89,7 @@ public class ActorServiceTest {
         this.existingUserGroup.setId(UUID.randomUUID());
         this.existingUserGroup.setName("Existing User Group");
         this.existingUserGroup.setEmail("existing_group@example.com");
-        ((UserGroup)this.existingUserGroup).getUserList().add((User)this.existingUser);
+        ((UserGroup)this.existingUserGroup).getActorList().add((User)this.existingUser);
     }
 
     /**
@@ -158,9 +155,9 @@ public class ActorServiceTest {
         // Assert the response
         assertNotNull(returnedUserGroup, "User group was not found");
         assertEquals(this.existingUserGroup, returnedUserGroup, "User group returned was not the same as the mock");
-        assertEquals(2, ((UserGroup)returnedUserGroup).getUserList().size(), "User group did not have the expected number of members");
+        assertEquals(2, ((UserGroup)returnedUserGroup).getActorList().size(), "User group did not have the expected number of members");
         // check if the existing user is contained in user group
-        assertEquals(true, (((UserGroup)returnedUserGroup).getUserList().contains(this.existingUser)), "User group did not have the expected member");
+        assertEquals(true, (((UserGroup)returnedUserGroup).getActorList().contains(this.existingUser)), "User group did not have the expected member");
     }
 
     /**
@@ -213,7 +210,7 @@ public class ActorServiceTest {
         this.actorService.removeUserFromGroup(this.existingUser.getId(), this.existingUserGroup.getId());
 
         // Assert the response
-        assertEquals(0, ((UserGroup)this.existingUserGroup).getUserList().size(), "User group did not have the expected number of members");
+        assertEquals(0, ((UserGroup)this.existingUserGroup).getActorList().size(), "User group did not have the expected number of members");
     }
 
     /**
@@ -278,6 +275,22 @@ public class ActorServiceTest {
 
         // Verify that a deletion call took place in the repository
         verify(this.userRepository, times(1)).deleteById(this.existingUser.getId());
+    }
+
+    /**
+     * Test user creation
+     */
+    @Test
+    void testUserCreation() {
+        // Mock the repository call
+        doAnswer(i -> i.getArguments()[0]).when(this.userRepository).save(any());
+
+        // Execute the service call
+        Actor returnedUser = this.actorService.save(this.newUser);
+
+        // Assert the response
+        assertNotNull(returnedUser, "User was not created");
+        assertEquals(this.newUser, returnedUser, "User returned was not the same as the mock");
     }
 
 }

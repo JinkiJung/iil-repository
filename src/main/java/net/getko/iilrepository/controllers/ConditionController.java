@@ -78,13 +78,17 @@ public class ConditionController {
         log.debug("REST request to get an condition : {}", conditionDto);
         Condition condition = this.conditionDtoToDomainMapper.convertTo(conditionDto, Condition.class);
         final Condition result = this.conditionService.create(condition);
-        return ResponseEntity.ok()
+        return ResponseEntity.created(null)
                 .body(this.conditionDomainToDtoMapper.convertTo(result, ConditionDto.class));
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> deleteCondition(@PathVariable UUID id) {
         log.debug("REST request to delete an condition : {}", id);
+        if (this.conditionService.findById(id) == null) {
+            return ResponseEntity.notFound()
+                    .build();
+        }
         this.conditionService.delete(id);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("successfully deleted - ",

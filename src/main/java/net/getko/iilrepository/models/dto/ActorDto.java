@@ -7,12 +7,13 @@ import java.util.Set;
 import java.util.UUID;
 
 @Data
-public class ActorDto implements Serializable {
+public class ActorDto {
+
     private UUID id;
     private String name;
     private String email;
     private String iconLink;
     private boolean isGroup;
     private Set<IilDto> iilList;
-    private Set<ActorDto> userList;
+    private Set<ActorDto> actorList;
 }

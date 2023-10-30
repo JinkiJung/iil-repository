@@ -1,7 +1,9 @@
 package net.getko.iilrepository.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.getko.iilrepository.TestingConfiguration;
 import net.getko.iilrepository.components.DomainDtoMapper;
+import net.getko.iilrepository.models.domain.Action;
 import net.getko.iilrepository.models.domain.Iil;
 import net.getko.iilrepository.models.dto.IilDto;
 import net.getko.iilrepository.services.IilService;
@@ -13,74 +15,123 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("test")
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(controllers = IilController.class)
+@AutoConfigureMockMvc(addFilters = false)
+@ExtendWith(MockitoExtension.class)
+@Import(TestingConfiguration.class)
 public class IilControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @Mock
+    @MockBean
     private IilService iilService;
 
-    @Mock
-    private DomainDtoMapper<Iil, IilDto> iilDomainToDtoMapper;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-    @Mock
-    private DomainDtoMapper<IilDto, Iil> iilDtoToDomainMapper;
+    @Qualifier("iilDomainToDtoMapper")
+    @Autowired
+    public DomainDtoMapper illDomainToDtoMapper;
 
     @InjectMocks
     private IilController iilController;
 
-    private final UUID uuid = UUID.randomUUID();
+    private List<Iil> iilList;
+
+    private Iil newIil;
+
+    private Iil existingIil;
+
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(iilController).build();
+        // Initialise the iils list
+        this.iilList = new ArrayList<>();
+        for (int i=0 ; i<10 ; i++) {
+            Iil iil = new Iil();
+            iil.setId(UUID.randomUUID());
+            iil.setAct(new Action("Test "+i));
+            this.iilList.add(iil);
+        }
+
+        // initialise new iil
+        this.newIil = new Iil();
+        this.newIil.setId(UUID.randomUUID());
+        this.newIil.setAct(new Action("Test new"));
+
+        // initialize existing iil
+        this.existingIil = new Iil();
+        this.existingIil.setId(UUID.randomUUID());
+        this.existingIil.setAct(new Action("Test existing"));
+
     }
 
+    /**
+     * Test the API can return a list of all iils.
+     */
     @Test
-    void getIils() throws Exception {
-        // Arrange
-        Iil iil1 = new Iil();
-        Iil iil2 = new Iil();
-        List<Iil> iils = Arrays.asList(iil1, iil2);
-/*
-        IilDto iilDto1 = new IilDto(iil1.getId(), iil1.getName());
-        IilDto iilDto2 = new IilDto(iil2.getId(), iil2.getName());
-        List<IilDto> iilDtos = Arrays.asList(iilDto1, iilDto2);
-
-        when(iilService.findAll()).thenReturn(iils);
-        when(iilDomainToDtoMapper.convertToList(any(), eq(IilDto.class))).thenReturn(iilDtos);
-
-        // Act & Assert
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/iils")
-                        .contentType(MediaType.APPLICATION_JSON))
+    void testGetFullIilList() throws Exception {
+        doReturn(this.iilList).when(this.iilService).findAll();
+        // Perform the MVC request
+        MvcResult mvcResult = this.mockMvc.perform(get("/api/iils"))
+                .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].id").value(iilDto1.getId().toString()))
-                .andExpect(jsonPath("$[0].name").value(iilDto1.getName()))
-                .andExpect(jsonPath("$[1].id").value(iilDto2.getId().toString()))
-                .andExpect(jsonPath("$[1].name").value(iilDto2.getName()));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andReturn();
+
+        IilDto[] result = this.objectMapper.readValue(mvcResult.getResponse().getContentAsString(), IilDto[].class);
+        assertEquals(10, Arrays.asList(result).size());
     }
 
+    /**
+     * Test the API can return an iil for given ID
+     */
+    @Test
+    void testGetIilWithId() throws Exception {
+        doReturn(this.existingIil).when(this.iilService).findById(this.existingIil.getId());
+        // Perform the MVC request
+        MvcResult mvcResult = this.mockMvc.perform(get("/api/iils/{id}", this.existingIil.getId()))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andReturn();
+
+        IilDto result = this.objectMapper.readValue(mvcResult.getResponse().getContentAsString(), IilDto.class);
+        // convert result to Iil type
+        assertNotNull(result);
+        assertEquals(this.existingIil.getId(), result.getId());
+        assertEquals(this.existingIil.getAct().getId(), result.getAct().getId());
+    }
+
+
+
+    /*
     @Test
     public void testGetIil() throws Exception {
         UUID id = UUID.randomUUID();
@@ -118,5 +169,4 @@ public class IilControllerTest {
         verify(iilService, times(1)).delete(uuid);
 
  */
-    }
 }
