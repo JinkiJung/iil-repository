@@ -33,6 +33,9 @@ public class Action {
     @Column(name = "shortName")
     private String shortName;
 
+    @Column(name = "version")
+    private String version;
+
     @Column(name = "namespace")
     private String namespace;
 

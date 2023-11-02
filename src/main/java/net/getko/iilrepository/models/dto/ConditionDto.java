@@ -14,6 +14,8 @@ public class ConditionDto {
 
     private String namespace;
 
+    private String version;
+
     private String shortName;
 
     private String name;

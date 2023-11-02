@@ -28,6 +28,9 @@ public class Condition {
     @Column(name = "type")
     private ConditionType type;
 
+    @Column(name = "version")
+    private String version;
+
     @Column(name = "shortName")
     private String shortName;
 
