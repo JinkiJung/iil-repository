@@ -38,7 +38,7 @@ public class ConditionService {
     }
 
     @Transactional(readOnly = true)
-    public List<Condition> findByType(ConditionType type) throws ConfigDataNotFoundException {
+    public List<Condition> findAllByType(ConditionType type) throws ConfigDataNotFoundException {
         log.debug("Request to get an condition : {}", type);
         return this.conditionRepository.findByType(type);
     }
@@ -54,7 +54,7 @@ public class ConditionService {
     }
 
     @Transactional
-    public Condition create(Condition condition) {
+    public Condition save(Condition condition) {
         if (condition.getId() != null && this.conditionRepository.findById(condition.getId()).isPresent()) {
             throw new NoCorrespondingGoalException("Duplicate data detected");
         }

@@ -3,8 +3,10 @@ package net.getko.iilrepository;
 import net.getko.iilrepository.components.DomainDtoMapper;
 import net.getko.iilrepository.config.GlobalConfig;
 import net.getko.iilrepository.models.domain.Actor;
+import net.getko.iilrepository.models.domain.Condition;
 import net.getko.iilrepository.models.domain.Iil;
 import net.getko.iilrepository.models.dto.ActorDto;
+import net.getko.iilrepository.models.dto.ConditionDto;
 import net.getko.iilrepository.models.dto.IilDto;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -29,4 +31,9 @@ public class TestingConfiguration {
     @Bean
     public DomainDtoMapper actorDtoToDomainMapper() { return new DomainDtoMapper<ActorDto, Actor>(); }
 
+    @Bean
+    public DomainDtoMapper conditionDomainToDtoMapper() { return new DomainDtoMapper<Condition, ConditionDto>(); }
+
+    @Bean
+    public DomainDtoMapper conditionDtoToDomainMapper() { return new DomainDtoMapper<ConditionDto, Condition>(); }
 }

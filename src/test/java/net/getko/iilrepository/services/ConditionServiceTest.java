@@ -17,7 +17,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -107,7 +106,7 @@ public class ConditionServiceTest {
     void testFindByType() throws DataNotFoundException {
         doReturn(this.conditions).when(this.conditionRepository).findByType(this.existingCondition.getType());
 
-        List<Condition> result = this.conditionService.findByType(this.existingCondition.getType());
+        List<Condition> result = this.conditionService.findAllByType(this.existingCondition.getType());
 
         assertNotNull(conditions);
         assertEquals(this.conditions.size(), result.size());

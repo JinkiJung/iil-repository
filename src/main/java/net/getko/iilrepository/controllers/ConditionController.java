@@ -9,7 +9,6 @@ import net.getko.iilrepository.models.dto.ConditionDto;
 import net.getko.iilrepository.services.ConditionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -53,7 +52,7 @@ public class ConditionController {
         ConditionType conditionType;
         try {
             conditionType = ConditionType.valueOf(type.toUpperCase());
-            final List<Condition> conditions = this.conditionService.findByType(conditionType);
+            final List<Condition> conditions = this.conditionService.findAllByType(conditionType);
             return ResponseEntity.ok()
                     .body(this.conditionDomainToDtoMapper.convertToList(conditions, ConditionDto.class));
         } catch (IllegalArgumentException e) {
@@ -77,7 +76,7 @@ public class ConditionController {
     public ResponseEntity<ConditionDto> createCondition(@Valid @RequestBody ConditionDto conditionDto) throws JsonProcessingException {
         log.debug("REST request to get an condition : {}", conditionDto);
         Condition condition = this.conditionDtoToDomainMapper.convertTo(conditionDto, Condition.class);
-        final Condition result = this.conditionService.create(condition);
+        final Condition result = this.conditionService.save(condition);
         return ResponseEntity.created(null)
                 .body(this.conditionDomainToDtoMapper.convertTo(result, ConditionDto.class));
     }
