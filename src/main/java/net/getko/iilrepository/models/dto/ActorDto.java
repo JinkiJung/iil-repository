@@ -14,6 +14,5 @@ public class ActorDto {
     private String email;
     private String iconLink;
     private boolean isGroup;
-    private Set<IilDto> iilList;
     private Set<ActorDto> actorList;
 }
