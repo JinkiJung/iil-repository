@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.getko.iilrepository.TestingConfiguration;
 import net.getko.iilrepository.components.DomainDtoMapper;
 import net.getko.iilrepository.models.domain.Action;
+import net.getko.iilrepository.models.domain.Actor;
 import net.getko.iilrepository.models.domain.Iil;
+import net.getko.iilrepository.models.domain.User;
 import net.getko.iilrepository.models.dto.IilDto;
 import net.getko.iilrepository.services.IilService;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,15 +70,20 @@ public class IilControllerTest {
 
     private Iil existingIil;
 
-
+    private Actor testActor1;
     @BeforeEach
     void setUp() {
+        this.testActor1 = new User();
+        this.testActor1.setId(UUID.fromString("e91ab6d1-2585-422e-94a7-e538cbf284c3"));
+        this.testActor1.setName("test user");
+
         // Initialise the iils list
         this.iilList = new ArrayList<>();
         for (int i=0 ; i<10 ; i++) {
             Iil iil = new Iil();
             iil.setId(UUID.randomUUID());
             iil.setAct(new Action("Test "+i));
+            iil.setActor(this.testActor1);
             this.iilList.add(iil);
         }
 
@@ -129,6 +136,22 @@ public class IilControllerTest {
         assertEquals(this.existingIil.getAct().getId(), result.getAct().getId());
     }
 
+    /**
+     * Test the API can return a list of iils for given actor ID
+     */
+    @Test
+    void testGetIilsByActorId() throws Exception {
+        doReturn(this.iilList).when(this.iilService).findIilsByActorId(this.testActor1.getId());
+        // Perform the MVC request
+        MvcResult mvcResult = this.mockMvc.perform(get("/api/iils/actor/{actorId}", this.testActor1.getId()))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andReturn();
+
+        IilDto[] result = this.objectMapper.readValue(mvcResult.getResponse().getContentAsString(), IilDto[].class);
+        assertEquals(10, Arrays.asList(result).size());
+    }
 
 
     /*

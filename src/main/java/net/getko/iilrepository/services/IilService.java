@@ -97,6 +97,18 @@ public class IilService {
     }
 
     /**
+     * get iil list by actor id
+     *
+     * @param actorId
+     * @return iil list
+     */
+    @Transactional
+    public List<Iil> findIilsByActorId(UUID actorId) {
+        log.debug("Request to get iil list by actor id : {}", actorId);
+        return this.iilRepository.findByActorId(actorId);
+    }
+
+    /**
      * Save an iil.
      *
      * @param iil  the entity to save

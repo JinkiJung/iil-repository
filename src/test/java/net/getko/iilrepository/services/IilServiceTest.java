@@ -217,4 +217,22 @@ public class IilServiceTest {
         this.iilService.updateState(this.existingIil, IilState.ACTIVATED);
         assertEquals(IilState.ACTIVATED, this.existingIil.getState());
     }
+
+    /**
+     * Test get iil list by actorID
+     */
+    @Test
+    void testFindIilsByActorId() {
+        doReturn(this.iilList).when(this.iilRepository).findByActorId(this.testActor1.getId());
+
+        // Perform the service call
+        List<Iil> result = this.iilService.findIilsByActorId(this.testActor1.getId());
+
+        // Make sure the eager relationships repo call was called
+        verify(this.iilRepository, times(1)).findByActorId(this.testActor1.getId());
+
+        // Test the result
+        assertNotNull(result);
+        assertEquals(this.iilList.size(), result.size());
+    }
 }

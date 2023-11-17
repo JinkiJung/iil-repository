@@ -58,6 +58,14 @@ public class IilController {
                 .body(this.iilDomainToDtoMapper.convertTo(result, IilDto.class));
     }
 
+    @GetMapping(value = "/actor/{actorId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<IilDto>> getIilsByActorId(@PathVariable UUID actorId) {
+        log.debug("REST request to get a list of iils by actor id");
+        final List<Iil> iils = this.iilService.findIilsByActorId(actorId);
+        return ResponseEntity.ok()
+                .body(this.iilDomainToDtoMapper.convertToList(iils, IilDto.class));
+    }
+
     @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<IilDto> createIil(@Valid @RequestBody IilDto iilDto) {
         log.debug("REST request to get an iil : {}", iilDto);
