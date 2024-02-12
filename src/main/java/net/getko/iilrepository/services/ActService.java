@@ -3,8 +3,8 @@ package net.getko.iilrepository.services;
 import lombok.extern.slf4j.Slf4j;
 import net.getko.iilrepository.exceptions.DataNotFoundException;
 import net.getko.iilrepository.exceptions.NoCorrespondingGoalException;
-import net.getko.iilrepository.models.domain.Action;
-import net.getko.iilrepository.repositories.ActionRepository;
+import net.getko.iilrepository.models.domain.Act;
+import net.getko.iilrepository.repositories.ActRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.config.ConfigDataNotFoundException;
 import org.springframework.stereotype.Service;
@@ -19,60 +19,60 @@ import java.util.UUID;
 @Service
 @Slf4j
 @Transactional
-public class ActionService {
+public class ActService {
 
     @Autowired
-    ActionRepository actionRepository;
+    ActRepository actRepository;
 
     @Transactional(readOnly = true)
-    public List<Action> findAll() {
+    public List<Act> findAll() {
         log.debug("Request to get all actions");
-        return this.actionRepository.findAll();
+        return this.actRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public Action findById(UUID id) throws ConfigDataNotFoundException {
+    public Act findById(UUID id) throws ConfigDataNotFoundException {
         log.debug("Request to get an action : {}", id);
-        return Optional.ofNullable(id).map(this.actionRepository::findById).get()
+        return Optional.ofNullable(id).map(this.actRepository::findById).get()
                 .orElseThrow(() -> new DataNotFoundException("No action found for the provided ID"));
     }
 
     @Transactional
-    public Action createWithNewId(Action action) {
-        if (action.getId() == null) {
-            action.setId(UUID.randomUUID());
-            return this.actionRepository.save(action);
+    public Act createWithNewId(Act act) {
+        if (act.getId() == null) {
+            act.setId(UUID.randomUUID());
+            return this.actRepository.save(act);
         } else {
             throw new EntityExistsException("Entity already exists with ID");
         }
     }
 
     @Transactional
-    public Action create(Action action) {
-        if (action.getId() != null && this.actionRepository.findById(action.getId()).isPresent()) {
+    public Act create(Act act) {
+        if (act.getId() != null && this.actRepository.findById(act.getId()).isPresent()) {
             throw new NoCorrespondingGoalException("Duplicate data detected");
         }
         // The save and return
-        return this.actionRepository.save(action);
+        return this.actRepository.save(act);
     }
 
     @Transactional
-    public Action update(Action action) {
-        if (!this.actionRepository.findById(action.getId()).isPresent()) {
+    public Act update(Act act) {
+        if (!this.actRepository.findById(act.getId()).isPresent()) {
             throw new DataNotFoundException("Data with given ID has not been found");
         }
         // The save and return
-        return this.actionRepository.save(action);
+        return this.actRepository.save(act);
     }
 
     @Transactional(propagation = Propagation.NESTED)
     public void delete(UUID id) throws DataNotFoundException {
         log.debug("Request to delete action : {}", id);
 
-        this.actionRepository.findById(id)
-                .map(Action::getId)
+        this.actRepository.findById(id)
+                .map(Act::getId)
                 .ifPresentOrElse(
-                        this.actionRepository::deleteById,
+                        this.actRepository::deleteById,
                         () -> {throw new DataNotFoundException("No action found for the provided ID");}
                 );
     }

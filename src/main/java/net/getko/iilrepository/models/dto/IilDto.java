@@ -1,7 +1,6 @@
 package net.getko.iilrepository.models.dto;
 
 import lombok.Data;
-import net.getko.iilrepository.models.domain.Actor;
 import net.getko.iilrepository.models.domain.IilState;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -29,9 +28,9 @@ public class IilDto implements Serializable {
 
     private ConditionDto activateIf;
 
-    private ActionDto act;
+    private ActDto act;
 
-    private ActorDto actor;
+    private String actor;
 
     private ConditionDto finishIf;
 

@@ -14,14 +14,12 @@ import org.springframework.stereotype.Indexed;
 
 import javax.persistence.Basic;
 import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -101,11 +99,10 @@ public class Iil{
     private Map<String, Object> input;
 
     @OneToOne(fetch=FetchType.LAZY)
-    private Action act;
+    private Act act;
     // 네임스페이스 존재, 호환성 보장
 
-    @ManyToOne(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
-    private Actor actor;
+    private String actor;
 
     @OneToOne(fetch=FetchType.LAZY)
     private Condition finishIf;

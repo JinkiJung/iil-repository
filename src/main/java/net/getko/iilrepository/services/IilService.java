@@ -5,7 +5,7 @@ import net.getko.iilrepository.exceptions.ActionValidationException;
 import net.getko.iilrepository.exceptions.ConditionValidationException;
 import net.getko.iilrepository.exceptions.DataNotFoundException;
 import net.getko.iilrepository.exceptions.NoCorrespondingGoalException;
-import net.getko.iilrepository.models.domain.Action;
+import net.getko.iilrepository.models.domain.Act;
 import net.getko.iilrepository.models.domain.Actor;
 import net.getko.iilrepository.models.domain.Condition;
 import net.getko.iilrepository.models.domain.Iil;
@@ -34,7 +34,7 @@ public class IilService {
     IilRepository iilRepository;
 
     @Autowired
-    ActionService actionService;
+    ActService actService;
 
     @Autowired
     ConditionService conditionService;
@@ -130,24 +130,14 @@ public class IilService {
             throw new NoCorrespondingGoalException("No iil corresponding to goal");
         }
 
-        if (iil.getActor() != null) {
-            // if the actor doesn't exist throw illegalargumentexception
-            Actor fetched = actorService.findById(iil.getActor().getId());
-            if (fetched == null) {
-                throw new IllegalArgumentException("No actor corresponding to the given ID from actor");
-            } else {
-                iil.setActor(fetched);
-            }
-        }
-
         if (iil.getAct() != null) {
             if (iil.getAct().getId() == null) {
-                Action action = actionService.createWithNewId(iil.getAct());
-                iil.setAct(action);
+                Act act = actService.createWithNewId(iil.getAct());
+                iil.setAct(act);
             } else {
-                Action fetched = actionService.findById(iil.getAct().getId());
+                Act fetched = actService.findById(iil.getAct().getId());
                 if (fetched == null) {
-                    throw new IllegalArgumentException("No action corresponding to the given ID from act");
+                    throw new IllegalArgumentException("No act corresponding to the given ID from act");
                 } else {
                     iil.setAct(fetched);
                 }

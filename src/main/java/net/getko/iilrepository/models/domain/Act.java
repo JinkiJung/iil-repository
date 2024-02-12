@@ -1,9 +1,7 @@
 package net.getko.iilrepository.models.domain;
 
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -22,7 +20,7 @@ import java.util.UUID;
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Data
-public class Action {
+public class Act {
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -45,7 +43,7 @@ public class Action {
     @Column(name = "code")
     private String code;
 
-    public Action(String name) {
+    public Act(String name) {
         this.name = name;
     }
 }

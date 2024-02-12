@@ -3,23 +3,23 @@ package net.getko.iilrepository.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.getko.iilrepository.TestingConfiguration;
 import net.getko.iilrepository.components.DomainDtoMapper;
+import net.getko.iilrepository.models.domain.Act;
 import net.getko.iilrepository.models.domain.Actor;
+import net.getko.iilrepository.models.domain.Iil;
 import net.getko.iilrepository.models.domain.User;
 import net.getko.iilrepository.models.domain.UserGroup;
 import net.getko.iilrepository.models.dto.ActorDto;
 import net.getko.iilrepository.services.ActorService;
+import net.getko.iilrepository.services.IilService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
@@ -27,7 +27,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -59,6 +58,9 @@ public class ActorControllerTest {
     @MockBean
     private ActorService actorService;
 
+    @MockBean
+    private IilService iilService;
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -76,6 +78,8 @@ public class ActorControllerTest {
     private UserGroup newUserGroup;
 
     private Actor existingActor;
+
+    private Iil existingIil;
 
     @BeforeEach
     void setUp() {
@@ -106,6 +110,10 @@ public class ActorControllerTest {
         actorList.add(this.existingActor);
         this.newUserGroup.setActorList(actorList);
 
+        this.existingIil = new Iil();
+        this.existingIil.setId(UUID.randomUUID());
+        this.existingIil.setAct(new Act("Test existing"));
+        this.existingIil.setActor(this.existingActor);
     }
 
     /**
@@ -205,6 +213,21 @@ public class ActorControllerTest {
         this.mockMvc.perform(delete("/api/actors/" + this.existingActor.getId()))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isNotFound())
+                .andReturn();
+    }
+
+    /**
+     * Test that an actor can not be deleted if it has any iils
+     */
+    @Test
+    void testDeleteAnActorWithIils() throws Exception {
+        // return list filled with this.existingIil
+        doReturn(this.existingActor).when(this.actorService).findById(this.existingActor.getId());
+        doReturn(List.of(this.existingIil)).when(this.iilService).findIilsByActorId(this.existingActor.getId());
+
+        this.mockMvc.perform(delete("/api/actors/" + this.existingActor.getId()))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isUnprocessableEntity())
                 .andReturn();
     }
 }

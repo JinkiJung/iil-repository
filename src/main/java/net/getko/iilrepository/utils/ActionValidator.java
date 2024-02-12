@@ -1,13 +1,13 @@
 package net.getko.iilrepository.utils;
 
-import net.getko.iilrepository.models.domain.Action;
+import net.getko.iilrepository.models.domain.Act;
 
 public class ActionValidator {
-    public static boolean validate(Action action) {
-        if (action.getId() == null || action.getId().toString().isEmpty()) {
+    public static boolean validate(Act act) {
+        if (act.getId() == null || act.getId().toString().isEmpty()) {
             return false;
         }
-        if (action.getName() == null) {
+        if (act.getName() == null) {
             return false;
         }
         return true;

@@ -5,6 +5,7 @@ import net.getko.iilrepository.components.DomainDtoMapper;
 import net.getko.iilrepository.models.domain.Actor;
 import net.getko.iilrepository.models.dto.ActorDto;
 import net.getko.iilrepository.services.ActorService;
+import net.getko.iilrepository.services.IilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -29,6 +30,9 @@ public class ActorController {
 
     @Autowired
     ActorService actorService;
+
+    @Autowired
+    IilService iilService;
 
     @Autowired
     DomainDtoMapper<ActorDto, Actor> actorDtoToDomainMapper;
@@ -67,6 +71,11 @@ public class ActorController {
             return ResponseEntity.notFound()
                     .build();
         }
+        // if actor has any iils, return bad request
+        if (!this.iilService.findIilsByActorId(id).isEmpty()){
+            return ResponseEntity.unprocessableEntity().build();
+        }
+
         log.debug("REST request to delete actor : {}", id);
         this.actorService.delete(id);
         HttpHeaders responseHeaders = new HttpHeaders();

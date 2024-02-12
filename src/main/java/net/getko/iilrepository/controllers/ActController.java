@@ -3,9 +3,9 @@ package net.getko.iilrepository.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import net.getko.iilrepository.components.DomainDtoMapper;
-import net.getko.iilrepository.models.domain.Action;
-import net.getko.iilrepository.models.dto.ActionDto;
-import net.getko.iilrepository.services.ActionService;
+import net.getko.iilrepository.models.domain.Act;
+import net.getko.iilrepository.models.dto.ActDto;
+import net.getko.iilrepository.services.ActService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -24,47 +24,47 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/actions")
+@RequestMapping("/api/acts")
 @Slf4j
-public class ActionController {
+public class ActController {
     @Autowired
-    ActionService actionService;
+    ActService actService;
 
     @Autowired
-    DomainDtoMapper<Action, ActionDto> actionDomainToDtoMapper;
+    DomainDtoMapper<Act, ActDto> actDomainToDtoMapper;
 
     @Autowired
-    DomainDtoMapper<ActionDto, Action> actionDtoToDomainMapper;
+    DomainDtoMapper<ActDto, Act> actDtoToDomainMapper;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ActionDto>> getActions() {
-        log.debug("REST request to get a list of actions");
-        final List<Action> actions = this.actionService.findAll();
+    public ResponseEntity<List<ActDto>> getActions() {
+        log.debug("REST request to get a list of acts");
+        final List<Act> acts = this.actService.findAll();
         return ResponseEntity.ok()
-                .body(this.actionDomainToDtoMapper.convertToList(actions, ActionDto.class));
+                .body(this.actDomainToDtoMapper.convertToList(acts, ActDto.class));
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ActionDto> getAction(@PathVariable UUID id) {
+    public ResponseEntity<ActDto> getAction(@PathVariable UUID id) {
         log.debug("REST request to get an action : {}", id);
-        final Action result = this.actionService.findById(id);
+        final Act result = this.actService.findById(id);
         return ResponseEntity.ok()
-                .body(this.actionDomainToDtoMapper.convertTo(result, ActionDto.class));
+                .body(this.actDomainToDtoMapper.convertTo(result, ActDto.class));
     }
 
     @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ActionDto> createAction(@Valid @RequestBody ActionDto actionDto) throws JsonProcessingException {
-        log.debug("REST request to get an action : {}", actionDto);
-        Action action = this.actionDtoToDomainMapper.convertTo(actionDto, Action.class);
-        final Action result = this.actionService.create(action);
+    public ResponseEntity<ActDto> createAction(@Valid @RequestBody ActDto actDto) throws JsonProcessingException {
+        log.debug("REST request to get an act : {}", actDto);
+        Act act = this.actDtoToDomainMapper.convertTo(actDto, Act.class);
+        final Act result = this.actService.create(act);
         return ResponseEntity.ok()
-                .body(this.actionDomainToDtoMapper.convertTo(result, ActionDto.class));
+                .body(this.actDomainToDtoMapper.convertTo(result, ActDto.class));
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> deleteAction(@PathVariable UUID id) {
         log.debug("REST request to delete an action : {}", id);
-        this.actionService.delete(id);
+        this.actService.delete(id);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("successfully deleted - ",
                 id.toString());
@@ -74,12 +74,12 @@ public class ActionController {
     }
 
     @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ActionDto> updateAction(@PathVariable UUID id, @Valid @RequestBody ActionDto actionDto) {
-        log.debug("REST request to get an action : {}", actionDto);
-        actionDto.setId(id);
-        Action action = this.actionDtoToDomainMapper.convertTo(actionDto, Action.class);
-        final Action result = this.actionService.update(action);
+    public ResponseEntity<ActDto> updateAction(@PathVariable UUID id, @Valid @RequestBody ActDto actDto) {
+        log.debug("REST request to get an act : {}", actDto);
+        actDto.setId(id);
+        Act act = this.actDtoToDomainMapper.convertTo(actDto, Act.class);
+        final Act result = this.actService.update(act);
         return ResponseEntity.ok()
-                .body(this.actionDomainToDtoMapper.convertTo(result, ActionDto.class));
+                .body(this.actDomainToDtoMapper.convertTo(result, ActDto.class));
     }
 }

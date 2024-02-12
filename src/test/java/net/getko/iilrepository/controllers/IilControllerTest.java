@@ -3,7 +3,7 @@ package net.getko.iilrepository.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.getko.iilrepository.TestingConfiguration;
 import net.getko.iilrepository.components.DomainDtoMapper;
-import net.getko.iilrepository.models.domain.Action;
+import net.getko.iilrepository.models.domain.Act;
 import net.getko.iilrepository.models.domain.Actor;
 import net.getko.iilrepository.models.domain.Iil;
 import net.getko.iilrepository.models.domain.User;
@@ -13,23 +13,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.*;
 
@@ -38,7 +33,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("test")
@@ -82,20 +76,20 @@ public class IilControllerTest {
         for (int i=0 ; i<10 ; i++) {
             Iil iil = new Iil();
             iil.setId(UUID.randomUUID());
-            iil.setAct(new Action("Test "+i));
-            iil.setActor(this.testActor1);
+            iil.setAct(new Act("Test "+i));
+            iil.setActor(this.testActor1.getName());
             this.iilList.add(iil);
         }
 
         // initialise new iil
         this.newIil = new Iil();
         this.newIil.setId(UUID.randomUUID());
-        this.newIil.setAct(new Action("Test new"));
+        this.newIil.setAct(new Act("Test new"));
 
         // initialize existing iil
         this.existingIil = new Iil();
         this.existingIil.setId(UUID.randomUUID());
-        this.existingIil.setAct(new Action("Test existing"));
+        this.existingIil.setAct(new Act("Test existing"));
 
     }
 
@@ -152,7 +146,6 @@ public class IilControllerTest {
         IilDto[] result = this.objectMapper.readValue(mvcResult.getResponse().getContentAsString(), IilDto[].class);
         assertEquals(10, Arrays.asList(result).size());
     }
-
 
     /*
     @Test
